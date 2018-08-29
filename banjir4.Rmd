@@ -344,6 +344,9 @@ dotplot(results)
 
 ```
 
+We decided to choose 200 tree instead of 100 tree because the Kappa performance is really well
+
+Kappa: https://stats.stackexchange.com/a/82187
 ```{r}
 banjir_data_forest <- modellist2$`200`
 ```
