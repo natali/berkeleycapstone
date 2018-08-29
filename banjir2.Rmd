@@ -1,0 +1,84 @@
+---
+title: "Banjir!"
+output: html_notebook
+---
+
+```{r}
+banjir_data <- read.csv("data/CLEAN DATASET BANJIR2.csv", stringsAsFactors = FALSE)
+
+banjir_data$PREDH1 <- factor(banjir_data$PREDH1, levels = c("0", "1"), labels = c("Normal", "Banjir"))
+banjir_data$PREDH2 <- factor(banjir_data$PREDH2, levels = c("0", "1", "2", "3"), labels = c("Normal", "H-2", "H-1", "Banjir"))
+
+banjir_data$MXSPD <- as.numeric(banjir_data$MXSPD)
+banjir_data$PRCP <- as.numeric(banjir_data$PRCP)
+```
+
+Now, let's use PREDH1, remove PREDH2
+```{r}
+banjir_data <- subset(banjir_data, select = -c(STN, YEARMODA, PREDH2, FOG, SNOW, HAIL))
+
+set.seed(3)
+
+banjir_data <- banjir_data[sample(nrow(banjir_data)),]
+
+table(banjir_data$PREDH1)
+
+```
+
+
+
+```{r}
+# Creating a normalize() function, which takes a vector x and for each value in that vector, subtracts the minimum value in x and divides by the range of x
+
+normalize <- function(x){
+  return ( 
+    (x - min(x))/(max(x) - min(x)) 
+           )
+}
+```
+
+
+Normalize data
+```{r}
+banjir_data_n <- as.data.frame(lapply(banjir_data[,1:14], normalize))
+```
+
+
+
+```{r}
+
+
+
+banjir_train <- banjir_data_n[1:190, ]
+banjir_test <- banjir_data_n[191:271, ]
+
+# remember we excluded our target variable (diagnosis) in wbcd_n
+# here we create our labels vector for use in training the knn model later
+banjir_train_labels <- banjir_data[1:190,15]
+banjir_test_labels <- banjir_data[191:271,15]
+```
+
+```{r}
+table(banjir_train_labels)
+```
+
+```{r}
+table(banjir_test_labels)
+```
+
+
+```{r}
+library(class)
+
+# We use k=21, ~sqrt(469) as its also an odd number we eliminate the prob. of getting a tie
+banjir_pred <- knn(train = banjir_train, test=banjir_test, cl=banjir_train_labels, k=21)
+```
+
+
+```{r}
+library(gmodels)
+CrossTable(x=banjir_test_labels, y=banjir_pred)
+```
+
+
+
