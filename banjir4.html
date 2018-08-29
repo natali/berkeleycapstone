@@ -64,18 +64,18 @@
     }
 
     slides > slide {
-      -webkit-transition: all 0.4s ease-in-out;
-      -moz-transition: all 0.4s ease-in-out;
-      -o-transition: all 0.4s ease-in-out;
-      transition: all 0.4s ease-in-out;
+      -webkit-transition: all 0.6s ease-in-out;
+      -moz-transition: all 0.6s ease-in-out;
+      -o-transition: all 0.6s ease-in-out;
+      transition: all 0.6s ease-in-out;
     }
 
     .auto-fadein {
       -webkit-transition: opacity 0.6s ease-in;
-      -webkit-transition-delay: 0.4s;
-      -moz-transition: opacity 0.6s ease-in 0.4s;
-      -o-transition: opacity 0.6s ease-in 0.4s;
-      transition: opacity 0.6s ease-in 0.4s;
+      -webkit-transition-delay: 0.6s;
+      -moz-transition: opacity 0.6s ease-in 0.6s;
+      -o-transition: opacity 0.6s ease-in 0.6s;
+      transition: opacity 0.6s ease-in 0.6s;
       opacity: 0;
     }
 
@@ -98,25 +98,25 @@
           </hgroup>
   </slide>
 
-<slide class=""><hgroup><h2>Background</h2></hgroup><article  id="background">
+<slide class=""><hgroup><h2>Background</h2></hgroup><article  id="background" class="smaller ">
 
 <p>Jakarta flood has become somekind of a tradition, where flood can happen yearly and can go for over 2 weeks on every occurence Research found that there are a few reasons for the flood: - high precipitation - humidity level - tide level - land subsidence</p>
 
-</article></slide><slide class=""><hgroup><h2>Problem Statement</h2></hgroup><article  id="problem-statement" class="flexbox vcenter">
+</article></slide><slide class=""><hgroup><h2>Problem Statement</h2></hgroup><article  id="problem-statement" class="smaller flexbox vcenter">
 
 <p>Can we predict if flooding is going to happen given the weather data H-1 and H-2 prior of the event itself?</p>
 
-</article></slide><slide class=""><hgroup><h2>Expected Result</h2></hgroup><article  id="expected-result" class="flexbox vcenter">
+</article></slide><slide class=""><hgroup><h2>Expected Result</h2></hgroup><article  id="expected-result" class="smaller flexbox vcenter">
 
 <p>To confirm if there is statistical significance that we are able predict the flood before it happens, based on the weather data</p>
 
-</article></slide><slide class=""><hgroup><h2>Data Sources</h2></hgroup><article  id="data-sources">
+</article></slide><slide class=""><hgroup><h2>Data Sources</h2></hgroup><article  id="data-sources" class="smaller ">
 
 <p><a href='https://data.go.id/dataset/curah-hujan-dan-hari-hujan-menurut-bulan-dki-jakarta' title=''>https://data.go.id/dataset/curah-hujan-dan-hari-hujan-menurut-bulan-dki-jakarta</a> <a href='https://bpbd.jakarta.go.id/waterlevel/' title=''>https://bpbd.jakarta.go.id/waterlevel/</a> <a href='http://data.jakarta.go.id/group/lingkungan-hidup' title=''>http://data.jakarta.go.id/group/lingkungan-hidup</a></p>
 
-</article></slide><slide class=""><hgroup><h2>Basic data from NOAA</h2></hgroup><article  id="basic-data-from-noaa" class="flexbox vcenter">
+</article></slide><slide class=""><hgroup><h2>Basic data from NOAA</h2></hgroup><article  id="basic-data-from-noaa" class="smaller flexbox vcenter">
 
-</article></slide><slide class=""><hgroup><h2>Data source from NOAA</h2></hgroup><article  id="data-source-from-noaa">
+</article></slide><slide class=""><hgroup><h2>Data source from NOAA</h2></hgroup><article  id="data-source-from-noaa" class="smaller ">
 
 <p>Data source sample</p>
 
@@ -138,7 +138,7 @@ head(banjir_data)</pre>
 ## 5   0    1    0    0       0       0      0      0
 ## 6   0    1    0    0       0       0      0      0</pre>
 
-</article></slide><slide class=""><hgroup><h2>Data source explanation</h2></hgroup><article  id="data-source-explanation">
+</article></slide><slide class=""><hgroup><h2>Data source explanation</h2></hgroup><article  id="data-source-explanation" class="smaller ">
 
 <p>Breakdown of the data structure</p>
 
@@ -227,7 +227,7 @@ head(banjir_data)</pre>
 </tr>
 </table>
 
-</article></slide><slide class=""><hgroup><h2>ETL the data</h2></hgroup><article  id="etl-the-data">
+</article></slide><slide class=""><hgroup><h2>ETL the data</h2></hgroup><article  id="etl-the-data" class="smaller ">
 
 <pre class = 'prettyprint lang-r'>summary(banjir_data)</pre>
 
@@ -275,7 +275,7 @@ head(banjir_data)</pre>
 ## Normal Banjir 
 ##   1025    203</pre>
 
-</article></slide><slide class=""><hgroup><h2>Data preparation</h2></hgroup><article  id="data-preparation">
+</article></slide><slide class=""><hgroup><h2>Data preparation</h2></hgroup><article  id="data-preparation" class="smaller ">
 
 <p>We remove unnecessary data</p>
 
@@ -297,7 +297,7 @@ banjir_data_intrain &lt;- sample(nrow(banjir_data), nrow(banjir_data)*0.8)
 banjir_data_train &lt;- banjir_data[banjir_data_intrain, ]
 banjir_data_test &lt;- banjir_data[-banjir_data_intrain, ]</pre>
 
-</article></slide><slide class=""><hgroup><h2>The data ratio between the train data and test data</h2></hgroup><article  id="the-data-ratio-between-the-train-data-and-test-data">
+</article></slide><slide class=""><hgroup><h2>The data ratio between the train data and test data</h2></hgroup><article  id="the-data-ratio-between-the-train-data-and-test-data" class="smaller ">
 
 <pre class = 'prettyprint lang-r'>prop.table(table(banjir_data_train$PREDH1))</pre>
 
@@ -313,7 +313,7 @@ banjir_data_test &lt;- banjir_data[-banjir_data_intrain, ]</pre>
 
 <p>Using set.seed(1), we see even spread of Normal and Banjir for both of data</p>
 
-</article></slide><slide class=""><hgroup><h2>Random forest function</h2></hgroup><article  id="random-forest-function">
+</article></slide><slide class=""><hgroup><h2>Random forest function</h2></hgroup><article  id="random-forest-function" class="smaller ">
 
 <p>Here we use RepeatedCV</p>
 
@@ -389,7 +389,7 @@ summary(results)</pre>
 
 <pre class = 'prettyprint lang-r'>banjir_data_forest &lt;- modellist1$`1000`</pre>
 
-</article></slide><slide class=""><hgroup><h2>Random forest</h2></hgroup><article  id="random-forest">
+</article></slide><slide class=""><hgroup><h2>Random forest</h2></hgroup><article  id="random-forest" class="smaller ">
 
 <p>Result of the random forest function</p>
 
@@ -415,7 +415,7 @@ summary(results)</pre>
 ## Accuracy was used to select the optimal model using the largest value.
 ## The final value used for the model was mtry = 3.741657.</pre>
 
-</article></slide><slide class=""><hgroup><h2>Prediction based on the formula</h2></hgroup><article  id="prediction-based-on-the-formula">
+</article></slide><slide class=""><hgroup><h2>Prediction based on the formula</h2></hgroup><article  id="prediction-based-on-the-formula" class="smaller ">
 
 <p>We try to see the result of the prediction</p>
 
@@ -434,13 +434,13 @@ banjir_rf</pre>
 
 <pre >## [1] 0.7642276</pre>
 
-</article></slide><slide class=""><hgroup><h2>What if we add Water Gate</h2></hgroup><article  id="what-if-we-add-water-gate">
+</article></slide><slide class=""><hgroup><h2>What if we add Water Gate</h2></hgroup><article  id="what-if-we-add-water-gate" class="smaller ">
 
 <p>We found data of water level in the Katulampa water gate</p>
 
 <pre class = 'prettyprint lang-r'>banjir_data &lt;- read.csv(&quot;data/CLEAN DATASET BANJIR2.csv&quot;, stringsAsFactors = FALSE)</pre>
 
-</article></slide><slide class=""><hgroup><h2>ETL the data</h2></hgroup><article  id="etl-the-data-1">
+</article></slide><slide class=""><hgroup><h2>ETL the data</h2></hgroup><article  id="etl-the-data-1" class="smaller ">
 
 <pre class = 'prettyprint lang-r'>summary(banjir_data)</pre>
 
@@ -488,7 +488,7 @@ banjir_rf</pre>
 ## Normal Banjir 
 ##    222     49</pre>
 
-</article></slide><slide class=""><hgroup><h2>Data preparation</h2></hgroup><article  id="data-preparation-1">
+</article></slide><slide class=""><hgroup><h2>Data preparation</h2></hgroup><article  id="data-preparation-1" class="smaller ">
 
 <p>We remove unnecessary data</p>
 
@@ -510,7 +510,7 @@ banjir_data_intrain &lt;- sample(nrow(banjir_data), nrow(banjir_data)*0.8)
 banjir_data_train &lt;- banjir_data[banjir_data_intrain, ]
 banjir_data_test &lt;- banjir_data[-banjir_data_intrain, ]</pre>
 
-</article></slide><slide class=""><hgroup><h2>The data ratio between the train data and test data</h2></hgroup><article  id="the-data-ratio-between-the-train-data-and-test-data-1">
+</article></slide><slide class=""><hgroup><h2>The data ratio between the train data and test data</h2></hgroup><article  id="the-data-ratio-between-the-train-data-and-test-data-1" class="smaller ">
 
 <pre class = 'prettyprint lang-r'>prop.table(table(banjir_data_train$PREDH1))</pre>
 
@@ -526,7 +526,7 @@ banjir_data_test &lt;- banjir_data[-banjir_data_intrain, ]</pre>
 
 <p>Using set.seed(1), we see even spread of Normal and Banjir for both of data</p>
 
-</article></slide><slide class=""><hgroup><h2>Random forest function</h2></hgroup><article  id="random-forest-function-1">
+</article></slide><slide class=""><hgroup><h2>Random forest function</h2></hgroup><article  id="random-forest-function-1" class="smaller ">
 
 <p>Here we use RepeatedCV</p>
 
@@ -593,9 +593,13 @@ summary(results)</pre>
 
 <p><img src="data:image/png;base64,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" width="720" /></p>
 
+<p>We decided to choose 200 tree instead of 100 tree because the Kappa performance is really well</p>
+
+<p>Kappa: <a href='https://stats.stackexchange.com/a/82187' title=''>https://stats.stackexchange.com/a/82187</a></p>
+
 <pre class = 'prettyprint lang-r'>banjir_data_forest &lt;- modellist2$`200`</pre>
 
-</article></slide><slide class=""><hgroup><h2>Random forest</h2></hgroup><article  id="random-forest-1">
+</article></slide><slide class=""><hgroup><h2>Random forest</h2></hgroup><article  id="random-forest-1" class="smaller ">
 
 <p>Result of the random forest function</p>
 
@@ -621,7 +625,7 @@ summary(results)</pre>
 ## Accuracy was used to select the optimal model using the largest value.
 ## The final value used for the model was mtry = 15.</pre>
 
-</article></slide><slide class=""><hgroup><h2>Prediction based on the formula</h2></hgroup><article  id="prediction-based-on-the-formula-1">
+</article></slide><slide class=""><hgroup><h2>Prediction based on the formula</h2></hgroup><article  id="prediction-based-on-the-formula-1" class="smaller ">
 
 <p>We try to see the result of the prediction</p>
 
