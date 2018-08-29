@@ -102,7 +102,49 @@
 
 <p>Lorem ipsum</p>
 
-</article></slide><slide class=""><hgroup><h2>Data</h2></hgroup><article  id="data">
+</article></slide><slide class=""><hgroup><h2>Basic data from NOAA</h2></hgroup><article  id="basic-data-from-noaa">
+
+<p>Now, let&#39;s use PREDH1, remove PREDH2</p>
+
+<pre >## 
+## Normal Banjir 
+##   1025    203</pre>
+
+<p>Normalize data</p>
+
+<pre >## 
+##    Normal    Banjir 
+## 0.8207739 0.1792261</pre>
+
+<pre >## 
+##    Normal    Banjir 
+## 0.8902439 0.1097561</pre>
+
+<pre >## Random Forest 
+## 
+## 982 samples
+##  13 predictor
+##   2 classes: &#39;Normal&#39;, &#39;Banjir&#39; 
+## 
+## No pre-processing
+## Resampling: Cross-Validated (5 fold, repeated 3 times) 
+## Summary of sample sizes: 786, 785, 786, 785, 786, 786, ... 
+## Resampling results across tuning parameters:
+## 
+##   mtry  Accuracy   Kappa     
+##    2    0.8143289  0.06665061
+##    7    0.8068580  0.09411487
+##   13    0.8048154  0.10581147
+## 
+## Accuracy was used to select the optimal model using the largest value.
+## The final value used for the model was mtry = 2.</pre>
+
+<pre >##         
+##          Normal Banjir
+##   Normal    214     24
+##   Banjir      5      3</pre>
+
+</article></slide><slide class=""><hgroup><h2>Data with Pintu Air (water gate data)</h2></hgroup><article  id="data-with-pintu-air-water-gate-data">
 
 <p>Here are the data sources</p>
 

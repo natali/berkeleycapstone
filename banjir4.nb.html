@@ -183,15 +183,109 @@ $(document).ready(function () {
 <h2>Problem</h2>
 <p>Lorem ipsum</p>
 </div>
-<div id="data" class="section level2">
-<h2>Data</h2>
+<div id="basic-data-from-noaa" class="section level2">
+<h2>Basic data from NOAA</h2>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYmFuamlyX2RhdGEgPC0gcmVhZC5jc3YoXCJkYXRhL0NMRUFOIERBVEFTRVQgQkFOSklSLmNzdlwiLCBzdHJpbmdzQXNGYWN0b3JzID0gRkFMU0UpXG5cbmJhbmppcl9kYXRhJFBSRURIMSA8LSBmYWN0b3IoYmFuamlyX2RhdGEkUFJFREgxLCBsZXZlbHMgPSBjKFwiMFwiLCBcIjFcIiksIGxhYmVscyA9IGMoXCJOb3JtYWxcIiwgXCJCYW5qaXJcIikpXG5iYW5qaXJfZGF0YSRQUkVESDIgPC0gZmFjdG9yKGJhbmppcl9kYXRhJFBSRURIMiwgbGV2ZWxzID0gYyhcIjBcIiwgXCIxXCIsIFwiMlwiLCBcIjNcIiksIGxhYmVscyA9IGMoXCJOb3JtYWxcIiwgXCJILTJcIiwgXCJILTFcIiwgXCJCYW5qaXJcIikpXG5cbmJhbmppcl9kYXRhJE1YU1BEIDwtIGFzLm51bWVyaWMoYmFuamlyX2RhdGEkTVhTUEQpXG5iYW5qaXJfZGF0YSRQUkNQIDwtIGFzLm51bWVyaWMoYmFuamlyX2RhdGEkUFJDUClcbmBgYCJ9 -->
+<pre class="r"><code>banjir_data &lt;- read.csv(&quot;data/CLEAN DATASET BANJIR.csv&quot;, stringsAsFactors = FALSE)
+
+banjir_data$PREDH1 &lt;- factor(banjir_data$PREDH1, levels = c(&quot;0&quot;, &quot;1&quot;), labels = c(&quot;Normal&quot;, &quot;Banjir&quot;))
+banjir_data$PREDH2 &lt;- factor(banjir_data$PREDH2, levels = c(&quot;0&quot;, &quot;1&quot;, &quot;2&quot;, &quot;3&quot;), labels = c(&quot;Normal&quot;, &quot;H-2&quot;, &quot;H-1&quot;, &quot;Banjir&quot;))
+
+banjir_data$MXSPD &lt;- as.numeric(banjir_data$MXSPD)
+banjir_data$PRCP &lt;- as.numeric(banjir_data$PRCP)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>Now, let’s use PREDH1, remove PREDH2</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYmFuamlyX2RhdGEgPC0gc3Vic2V0KGJhbmppcl9kYXRhLCBzZWxlY3QgPSAtYyhTVE4sIFlFQVJNT0RBLCBQUkVESDIsIEZPRywgU05PVywgSEFJTCkpXG5cbnNldC5zZWVkKDMpXG5cbmJhbmppcl9kYXRhIDwtIGJhbmppcl9kYXRhW3NhbXBsZShucm93KGJhbmppcl9kYXRhKSksXVxuXG50YWJsZShiYW5qaXJfZGF0YSRQUkVESDEpXG5cbmBgYCJ9 -->
+<pre class="r"><code>banjir_data &lt;- subset(banjir_data, select = -c(STN, YEARMODA, PREDH2, FOG, SNOW, HAIL))
+
+set.seed(3)
+
+banjir_data &lt;- banjir_data[sample(nrow(banjir_data)),]
+
+table(banjir_data$PREDH1)
+</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBDcmVhdGluZyBhIG5vcm1hbGl6ZSgpIGZ1bmN0aW9uLCB3aGljaCB0YWtlcyBhIHZlY3RvciB4IGFuZCBmb3IgZWFjaCB2YWx1ZSBpbiB0aGF0IHZlY3Rvciwgc3VidHJhY3RzIHRoZSBtaW5pbXVtIHZhbHVlIGluIHggYW5kIGRpdmlkZXMgYnkgdGhlIHJhbmdlIG9mIHhcblxubm9ybWFsaXplIDwtIGZ1bmN0aW9uKHgpe1xuICByZXR1cm4gKCBcbiAgICAoeCAtIG1pbih4KSkvKG1heCh4KSAtIG1pbih4KSkgXG4gICAgICAgICAgIClcbn1cbmBgYCJ9 -->
+<pre class="r"><code># Creating a normalize() function, which takes a vector x and for each value in that vector, subtracts the minimum value in x and divides by the range of x
+
+normalize &lt;- function(x){
+  return ( 
+    (x - min(x))/(max(x) - min(x)) 
+           )
+}</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>Normalize data</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuI2Jhbmppcl9kYXRhX24gPC0gYXMuZGF0YS5mcmFtZShsYXBwbHkoYmFuamlyX2RhdGFbLDE6MTNdLCBub3JtYWxpemUpKVxuXG4jYmFuamlyX2RhdGFfeCA8LSBtZXJnZShiYW5qaXJfZGF0YV9uLCBiYW5qaXJfZGF0YSRQUkVESDEsIGJ5PVwiXCIpXG4jIG4wX3ZhciA8LSBuZWFyWmVyb1ZhcihiYW5qaXJfZGF0YVssMToxNF0pXG4jIGJhbmppcl9kYXRhIDwtIGJhbmppcl9kYXRhWywtbjBfdmFyXVxuXG5iYW5qaXJfZGF0YV9pbnRyYWluIDwtIHNhbXBsZShucm93KGJhbmppcl9kYXRhKSwgbnJvdyhiYW5qaXJfZGF0YSkqMC44KVxuYmFuamlyX2RhdGFfdHJhaW4gPC0gYmFuamlyX2RhdGFbYmFuamlyX2RhdGFfaW50cmFpbiwgXVxuYmFuamlyX2RhdGFfdGVzdCA8LSBiYW5qaXJfZGF0YVstYmFuamlyX2RhdGFfaW50cmFpbiwgXVxuXG5gYGAifQ== -->
+<pre class="r"><code>#banjir_data_n &lt;- as.data.frame(lapply(banjir_data[,1:13], normalize))
+
+#banjir_data_x &lt;- merge(banjir_data_n, banjir_data$PREDH1, by=&quot;&quot;)
+# n0_var &lt;- nearZeroVar(banjir_data[,1:14])
+# banjir_data &lt;- banjir_data[,-n0_var]
+
+banjir_data_intrain &lt;- sample(nrow(banjir_data), nrow(banjir_data)*0.8)
+banjir_data_train &lt;- banjir_data[banjir_data_intrain, ]
+banjir_data_test &lt;- banjir_data[-banjir_data_intrain, ]
+</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucHJvcC50YWJsZSh0YWJsZShiYW5qaXJfZGF0YV90cmFpbiRQUkVESDEpKVxuXG5wcm9wLnRhYmxlKHRhYmxlKGJhbmppcl9kYXRhX3Rlc3QkUFJFREgxKSlcbmBgYCJ9 -->
+<pre class="r"><code>prop.table(table(banjir_data_train$PREDH1))
+
+prop.table(table(banjir_data_test$PREDH1))</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuY3RybCA8LSB0cmFpbkNvbnRyb2wobWV0aG9kPVwicmVwZWF0ZWRjdlwiLCBudW1iZXI9NSwgcmVwZWF0cz0zKVxuYmFuamlyX2RhdGFfZm9yZXN0IDwtIHRyYWluKFBSRURIMSB+IC4sIGRhdGE9YmFuamlyX2RhdGFfdHJhaW4sIG1ldGhvZD1cInJmXCIsIHRyQ29udHJvbCA9IGN0cmwpXG5gYGAifQ== -->
+<pre class="r"><code>ctrl &lt;- trainControl(method=&quot;repeatedcv&quot;, number=5, repeats=3)
+banjir_data_forest &lt;- train(PREDH1 ~ ., data=banjir_data_train, method=&quot;rf&quot;, trControl = ctrl)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYmFuamlyX2RhdGFfZm9yZXN0XG5gYGAifQ== -->
+<pre class="r"><code>banjir_data_forest</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxudGFibGUocHJlZGljdChiYW5qaXJfZGF0YV9mb3Jlc3QsIGJhbmppcl9kYXRhX3Rlc3RbLC0xNF0pLCBiYW5qaXJfZGF0YV90ZXN0WywxNF0pXG5gYGAifQ== -->
+<pre class="r"><code>table(predict(banjir_data_forest, banjir_data_test[,-14]), banjir_data_test[,14])</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+</div>
+<div id="data-with-pintu-air-water-gate-data" class="section level2">
+<h2>Data with Pintu Air (water gate data)</h2>
 <p>Here are the data sources</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYmFuamlyX2RhdGEgPC0gcmVhZC5jc3YoXCJkYXRhL0NMRUFOIERBVEFTRVQgQkFOSklSMi5jc3ZcIiwgc3RyaW5nc0FzRmFjdG9ycyA9IEZBTFNFKVxuYmFuamlyX2RhdGEkUFJFREgxIDwtIGZhY3RvcihiYW5qaXJfZGF0YSRQUkVESDEsIGxldmVscyA9IGMoXCIwXCIsIFwiMVwiKSwgbGFiZWxzID0gYyhcIk5vcm1hbFwiLCBcIkJhbmppclwiKSlcbmJhbmppcl9kYXRhJFBSRURIMiA8LSBmYWN0b3IoYmFuamlyX2RhdGEkUFJFREgyLCBsZXZlbHMgPSBjKFwiMFwiLCBcIjFcIiwgXCIyXCIsIFwiM1wiKSwgbGFiZWxzID0gYyhcIk5vcm1hbFwiLCBcIkgtMlwiLCBcIkgtMVwiLCBcIkJhbmppclwiKSlcbmJhbmppcl9kYXRhJE1YU1BEIDwtIGFzLm51bWVyaWMoYmFuamlyX2RhdGEkTVhTUEQpXG5iYW5qaXJfZGF0YSRQUkNQIDwtIGFzLm51bWVyaWMoYmFuamlyX2RhdGEkUFJDUClcbmBgYCJ9 -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYmFuamlyX2RhdGEgPC0gcmVhZC5jc3YoXCJkYXRhL0NMRUFOIERBVEFTRVQgQkFOSklSMi5jc3ZcIiwgc3RyaW5nc0FzRmFjdG9ycyA9IEZBTFNFKVxuXG5iYW5qaXJfZGF0YSRQUkVESDEgPC0gZmFjdG9yKGJhbmppcl9kYXRhJFBSRURIMSwgbGV2ZWxzID0gYyhcIjBcIiwgXCIxXCIpLCBsYWJlbHMgPSBjKFwiTm9ybWFsXCIsIFwiQmFuamlyXCIpKVxuYmFuamlyX2RhdGEkUFJFREgyIDwtIGZhY3RvcihiYW5qaXJfZGF0YSRQUkVESDIsIGxldmVscyA9IGMoXCIwXCIsIFwiMVwiLCBcIjJcIiwgXCIzXCIpLCBsYWJlbHMgPSBjKFwiTm9ybWFsXCIsIFwiSC0yXCIsIFwiSC0xXCIsIFwiQmFuamlyXCIpKVxuXG5iYW5qaXJfZGF0YSRNWFNQRCA8LSBhcy5udW1lcmljKGJhbmppcl9kYXRhJE1YU1BEKVxuYmFuamlyX2RhdGEkUFJDUCA8LSBhcy5udW1lcmljKGJhbmppcl9kYXRhJFBSQ1ApXG5gYGAifQ== -->
 <pre class="r"><code>banjir_data &lt;- read.csv(&quot;data/CLEAN DATASET BANJIR2.csv&quot;, stringsAsFactors = FALSE)
+
 banjir_data$PREDH1 &lt;- factor(banjir_data$PREDH1, levels = c(&quot;0&quot;, &quot;1&quot;), labels = c(&quot;Normal&quot;, &quot;Banjir&quot;))
 banjir_data$PREDH2 &lt;- factor(banjir_data$PREDH2, levels = c(&quot;0&quot;, &quot;1&quot;, &quot;2&quot;, &quot;3&quot;), labels = c(&quot;Normal&quot;, &quot;H-2&quot;, &quot;H-1&quot;, &quot;Banjir&quot;))
+
 banjir_data$MXSPD &lt;- as.numeric(banjir_data$MXSPD)
 banjir_data$PRCP &lt;- as.numeric(banjir_data$PRCP)</code></pre>
 <!-- rnb-source-end -->
@@ -284,7 +378,7 @@ banjir_data_forest &lt;- train(PREDH1 ~ ., data=banjir_data_train, method=&quot;
 <!-- rnb-text-end -->
 </div>
 
-<div id="rmd-source-code">LS0tDQp0aXRsZTogIkZsb29kIERldGVjdGlvbiBBbmFseXNpcyINCmF1dGhvcjogIlRoZSBJbmRvIEd1eXMgKGFuZCBHYWwpIg0KZGF0ZTogIkF1Z3VzdCAzMSwgMjAxOCINCm91dHB1dDogaW9zbGlkZXNfcHJlc2VudGF0aW9uDQotLS0NCg0KYGBge3Igc2V0dXAsIGluY2x1ZGU9RkFMU0V9DQprbml0cjo6b3B0c19jaHVuayRzZXQoZWNobyA9IEZBTFNFKQ0KbGlicmFyeShjYXJldCkNCmBgYA0KDQojIyBQcm9ibGVtDQoNCkxvcmVtIGlwc3VtDQoNCiMjIERhdGENCg0KSGVyZSBhcmUgdGhlIGRhdGEgc291cmNlcw0KDQpgYGB7cn0NCmJhbmppcl9kYXRhIDwtIHJlYWQuY3N2KCJkYXRhL0NMRUFOIERBVEFTRVQgQkFOSklSMi5jc3YiLCBzdHJpbmdzQXNGYWN0b3JzID0gRkFMU0UpDQoNCmJhbmppcl9kYXRhJFBSRURIMSA8LSBmYWN0b3IoYmFuamlyX2RhdGEkUFJFREgxLCBsZXZlbHMgPSBjKCIwIiwgIjEiKSwgbGFiZWxzID0gYygiTm9ybWFsIiwgIkJhbmppciIpKQ0KYmFuamlyX2RhdGEkUFJFREgyIDwtIGZhY3RvcihiYW5qaXJfZGF0YSRQUkVESDIsIGxldmVscyA9IGMoIjAiLCAiMSIsICIyIiwgIjMiKSwgbGFiZWxzID0gYygiTm9ybWFsIiwgIkgtMiIsICJILTEiLCAiQmFuamlyIikpDQoNCmJhbmppcl9kYXRhJE1YU1BEIDwtIGFzLm51bWVyaWMoYmFuamlyX2RhdGEkTVhTUEQpDQpiYW5qaXJfZGF0YSRQUkNQIDwtIGFzLm51bWVyaWMoYmFuamlyX2RhdGEkUFJDUCkNCmBgYA0KDQojIyBDbGVhbmluZyB1cCBkYXRhDQoNClJlbW92aW5nIHVubmVjZXNzYXJ5IGRhdGEgc2V0cywgc3VjaCBhcyBTdGF0aW9uLCBZZWFyLU1vbnRoLURheSwgRm9nLCBTbm93IGFuZCBIYWlsIGRhdGENCmBgYHtyfQ0KYmFuamlyX2RhdGEgPC0gc3Vic2V0KGJhbmppcl9kYXRhLCBzZWxlY3QgPSAtYyhTVE4sIFlFQVJNT0RBLCBQUkVESDIsIEZPRywgU05PVywgSEFJTCkpDQpgYGANCg0KDQoNCmBgYHtyfQ0Kc2V0LnNlZWQoMykNCg0KYmFuamlyX2RhdGEgPC0gYmFuamlyX2RhdGFbc2FtcGxlKG5yb3coYmFuamlyX2RhdGEpKSxdDQoNCnRhYmxlKGJhbmppcl9kYXRhJFBSRURIMSkNCg0KYGBgDQoNCg0KDQpgYGB7cn0NCiMgQ3JlYXRpbmcgYSBub3JtYWxpemUoKSBmdW5jdGlvbiwgd2hpY2ggdGFrZXMgYSB2ZWN0b3IgeCBhbmQgZm9yIGVhY2ggdmFsdWUgaW4gdGhhdCB2ZWN0b3IsIHN1YnRyYWN0cyB0aGUgbWluaW11bSB2YWx1ZSBpbiB4IGFuZCBkaXZpZGVzIGJ5IHRoZSByYW5nZSBvZiB4DQoNCm5vcm1hbGl6ZSA8LSBmdW5jdGlvbih4KXsNCiAgcmV0dXJuICggDQogICAgKHggLSBtaW4oeCkpLyhtYXgoeCkgLSBtaW4oeCkpIA0KICAgICAgICAgICApDQp9DQpgYGANCg0KDQpOb3JtYWxpemUgZGF0YQ0KYGBge3J9DQojYmFuamlyX2RhdGFfbiA8LSBhcy5kYXRhLmZyYW1lKGxhcHBseShiYW5qaXJfZGF0YVssMToxM10sIG5vcm1hbGl6ZSkpDQoNCiNiYW5qaXJfZGF0YV94IDwtIG1lcmdlKGJhbmppcl9kYXRhX24sIGJhbmppcl9kYXRhJFBSRURIMSwgYnk9IiIpDQojIG4wX3ZhciA8LSBuZWFyWmVyb1ZhcihiYW5qaXJfZGF0YVssMToxNF0pDQojIGJhbmppcl9kYXRhIDwtIGJhbmppcl9kYXRhWywtbjBfdmFyXQ0KDQpiYW5qaXJfZGF0YV9pbnRyYWluIDwtIHNhbXBsZShucm93KGJhbmppcl9kYXRhKSwgbnJvdyhiYW5qaXJfZGF0YSkqMC44KQ0KYmFuamlyX2RhdGFfdHJhaW4gPC0gYmFuamlyX2RhdGFbYmFuamlyX2RhdGFfaW50cmFpbiwgXQ0KYmFuamlyX2RhdGFfdGVzdCA8LSBiYW5qaXJfZGF0YVstYmFuamlyX2RhdGFfaW50cmFpbiwgXQ0KDQpgYGANCg0KDQpgYGB7cn0NCnByb3AudGFibGUodGFibGUoYmFuamlyX2RhdGFfdHJhaW4kUFJFREgxKSkNCg0KcHJvcC50YWJsZSh0YWJsZShiYW5qaXJfZGF0YV90ZXN0JFBSRURIMSkpDQpgYGANCg0KDQpgYGB7cn0NCmN0cmwgPC0gdHJhaW5Db250cm9sKG1ldGhvZD0icmVwZWF0ZWRjdiIsIG51bWJlcj01LCByZXBlYXRzPTMpDQpiYW5qaXJfZGF0YV9mb3Jlc3QgPC0gdHJhaW4oUFJFREgxIH4gLiwgZGF0YT1iYW5qaXJfZGF0YV90cmFpbiwgbWV0aG9kPSJyZiIsIHRyQ29udHJvbCA9IGN0cmwpDQpgYGANCg0KDQoNCmBgYHtyfQ0KYmFuamlyX2RhdGFfZm9yZXN0DQpgYGANCg0KYGBge3J9DQp0YWJsZShwcmVkaWN0KGJhbmppcl9kYXRhX2ZvcmVzdCwgYmFuamlyX2RhdGFfdGVzdFssLTE1XSksIGJhbmppcl9kYXRhX3Rlc3RbLDE1XSkNCmBgYA0KDQoNCg==</div>
+<div id="rmd-source-code">LS0tDQp0aXRsZTogIkZsb29kIERldGVjdGlvbiBBbmFseXNpcyINCmF1dGhvcjogIlRoZSBJbmRvIEd1eXMgKGFuZCBHYWwpIg0KZGF0ZTogIkF1Z3VzdCAzMSwgMjAxOCINCm91dHB1dDogaW9zbGlkZXNfcHJlc2VudGF0aW9uDQotLS0NCg0KYGBge3Igc2V0dXAsIGluY2x1ZGU9RkFMU0V9DQprbml0cjo6b3B0c19jaHVuayRzZXQoZWNobyA9IEZBTFNFKQ0KbGlicmFyeShjYXJldCkNCmBgYA0KDQojIyBQcm9ibGVtDQoNCkxvcmVtIGlwc3VtDQoNCiMjIEJhc2ljIGRhdGEgZnJvbSBOT0FBDQoNCg0KYGBge3J9DQpiYW5qaXJfZGF0YSA8LSByZWFkLmNzdigiZGF0YS9DTEVBTiBEQVRBU0VUIEJBTkpJUi5jc3YiLCBzdHJpbmdzQXNGYWN0b3JzID0gRkFMU0UpDQoNCmJhbmppcl9kYXRhJFBSRURIMSA8LSBmYWN0b3IoYmFuamlyX2RhdGEkUFJFREgxLCBsZXZlbHMgPSBjKCIwIiwgIjEiKSwgbGFiZWxzID0gYygiTm9ybWFsIiwgIkJhbmppciIpKQ0KYmFuamlyX2RhdGEkUFJFREgyIDwtIGZhY3RvcihiYW5qaXJfZGF0YSRQUkVESDIsIGxldmVscyA9IGMoIjAiLCAiMSIsICIyIiwgIjMiKSwgbGFiZWxzID0gYygiTm9ybWFsIiwgIkgtMiIsICJILTEiLCAiQmFuamlyIikpDQoNCmJhbmppcl9kYXRhJE1YU1BEIDwtIGFzLm51bWVyaWMoYmFuamlyX2RhdGEkTVhTUEQpDQpiYW5qaXJfZGF0YSRQUkNQIDwtIGFzLm51bWVyaWMoYmFuamlyX2RhdGEkUFJDUCkNCmBgYA0KDQpOb3csIGxldCdzIHVzZSBQUkVESDEsIHJlbW92ZSBQUkVESDINCmBgYHtyfQ0KYmFuamlyX2RhdGEgPC0gc3Vic2V0KGJhbmppcl9kYXRhLCBzZWxlY3QgPSAtYyhTVE4sIFlFQVJNT0RBLCBQUkVESDIsIEZPRywgU05PVywgSEFJTCkpDQoNCnNldC5zZWVkKDMpDQoNCmJhbmppcl9kYXRhIDwtIGJhbmppcl9kYXRhW3NhbXBsZShucm93KGJhbmppcl9kYXRhKSksXQ0KDQp0YWJsZShiYW5qaXJfZGF0YSRQUkVESDEpDQoNCmBgYA0KDQoNCg0KYGBge3J9DQojIENyZWF0aW5nIGEgbm9ybWFsaXplKCkgZnVuY3Rpb24sIHdoaWNoIHRha2VzIGEgdmVjdG9yIHggYW5kIGZvciBlYWNoIHZhbHVlIGluIHRoYXQgdmVjdG9yLCBzdWJ0cmFjdHMgdGhlIG1pbmltdW0gdmFsdWUgaW4geCBhbmQgZGl2aWRlcyBieSB0aGUgcmFuZ2Ugb2YgeA0KDQpub3JtYWxpemUgPC0gZnVuY3Rpb24oeCl7DQogIHJldHVybiAoIA0KICAgICh4IC0gbWluKHgpKS8obWF4KHgpIC0gbWluKHgpKSANCiAgICAgICAgICAgKQ0KfQ0KYGBgDQoNCg0KTm9ybWFsaXplIGRhdGENCmBgYHtyfQ0KI2Jhbmppcl9kYXRhX24gPC0gYXMuZGF0YS5mcmFtZShsYXBwbHkoYmFuamlyX2RhdGFbLDE6MTNdLCBub3JtYWxpemUpKQ0KDQojYmFuamlyX2RhdGFfeCA8LSBtZXJnZShiYW5qaXJfZGF0YV9uLCBiYW5qaXJfZGF0YSRQUkVESDEsIGJ5PSIiKQ0KIyBuMF92YXIgPC0gbmVhclplcm9WYXIoYmFuamlyX2RhdGFbLDE6MTRdKQ0KIyBiYW5qaXJfZGF0YSA8LSBiYW5qaXJfZGF0YVssLW4wX3Zhcl0NCg0KYmFuamlyX2RhdGFfaW50cmFpbiA8LSBzYW1wbGUobnJvdyhiYW5qaXJfZGF0YSksIG5yb3coYmFuamlyX2RhdGEpKjAuOCkNCmJhbmppcl9kYXRhX3RyYWluIDwtIGJhbmppcl9kYXRhW2Jhbmppcl9kYXRhX2ludHJhaW4sIF0NCmJhbmppcl9kYXRhX3Rlc3QgPC0gYmFuamlyX2RhdGFbLWJhbmppcl9kYXRhX2ludHJhaW4sIF0NCg0KYGBgDQoNCg0KYGBge3J9DQpwcm9wLnRhYmxlKHRhYmxlKGJhbmppcl9kYXRhX3RyYWluJFBSRURIMSkpDQoNCnByb3AudGFibGUodGFibGUoYmFuamlyX2RhdGFfdGVzdCRQUkVESDEpKQ0KYGBgDQoNCg0KYGBge3J9DQpjdHJsIDwtIHRyYWluQ29udHJvbChtZXRob2Q9InJlcGVhdGVkY3YiLCBudW1iZXI9NSwgcmVwZWF0cz0zKQ0KYmFuamlyX2RhdGFfZm9yZXN0IDwtIHRyYWluKFBSRURIMSB+IC4sIGRhdGE9YmFuamlyX2RhdGFfdHJhaW4sIG1ldGhvZD0icmYiLCB0ckNvbnRyb2wgPSBjdHJsKQ0KYGBgDQoNCg0KDQpgYGB7cn0NCmJhbmppcl9kYXRhX2ZvcmVzdA0KYGBgDQoNCmBgYHtyfQ0KdGFibGUocHJlZGljdChiYW5qaXJfZGF0YV9mb3Jlc3QsIGJhbmppcl9kYXRhX3Rlc3RbLC0xNF0pLCBiYW5qaXJfZGF0YV90ZXN0WywxNF0pDQpgYGANCg0KDQoNCg0KIyMgRGF0YSB3aXRoIFBpbnR1IEFpciAod2F0ZXIgZ2F0ZSBkYXRhKQ0KDQpIZXJlIGFyZSB0aGUgZGF0YSBzb3VyY2VzDQoNCmBgYHtyfQ0KYmFuamlyX2RhdGEgPC0gcmVhZC5jc3YoImRhdGEvQ0xFQU4gREFUQVNFVCBCQU5KSVIyLmNzdiIsIHN0cmluZ3NBc0ZhY3RvcnMgPSBGQUxTRSkNCg0KYmFuamlyX2RhdGEkUFJFREgxIDwtIGZhY3RvcihiYW5qaXJfZGF0YSRQUkVESDEsIGxldmVscyA9IGMoIjAiLCAiMSIpLCBsYWJlbHMgPSBjKCJOb3JtYWwiLCAiQmFuamlyIikpDQpiYW5qaXJfZGF0YSRQUkVESDIgPC0gZmFjdG9yKGJhbmppcl9kYXRhJFBSRURIMiwgbGV2ZWxzID0gYygiMCIsICIxIiwgIjIiLCAiMyIpLCBsYWJlbHMgPSBjKCJOb3JtYWwiLCAiSC0yIiwgIkgtMSIsICJCYW5qaXIiKSkNCg0KYmFuamlyX2RhdGEkTVhTUEQgPC0gYXMubnVtZXJpYyhiYW5qaXJfZGF0YSRNWFNQRCkNCmJhbmppcl9kYXRhJFBSQ1AgPC0gYXMubnVtZXJpYyhiYW5qaXJfZGF0YSRQUkNQKQ0KYGBgDQoNCiMjIENsZWFuaW5nIHVwIGRhdGENCg0KUmVtb3ZpbmcgdW5uZWNlc3NhcnkgZGF0YSBzZXRzLCBzdWNoIGFzIFN0YXRpb24sIFllYXItTW9udGgtRGF5LCBGb2csIFNub3cgYW5kIEhhaWwgZGF0YQ0KYGBge3J9DQpiYW5qaXJfZGF0YSA8LSBzdWJzZXQoYmFuamlyX2RhdGEsIHNlbGVjdCA9IC1jKFNUTiwgWUVBUk1PREEsIFBSRURIMiwgRk9HLCBTTk9XLCBIQUlMKSkNCmBgYA0KDQoNCg0KYGBge3J9DQpzZXQuc2VlZCgzKQ0KDQpiYW5qaXJfZGF0YSA8LSBiYW5qaXJfZGF0YVtzYW1wbGUobnJvdyhiYW5qaXJfZGF0YSkpLF0NCg0KdGFibGUoYmFuamlyX2RhdGEkUFJFREgxKQ0KDQpgYGANCg0KDQoNCmBgYHtyfQ0KIyBDcmVhdGluZyBhIG5vcm1hbGl6ZSgpIGZ1bmN0aW9uLCB3aGljaCB0YWtlcyBhIHZlY3RvciB4IGFuZCBmb3IgZWFjaCB2YWx1ZSBpbiB0aGF0IHZlY3Rvciwgc3VidHJhY3RzIHRoZSBtaW5pbXVtIHZhbHVlIGluIHggYW5kIGRpdmlkZXMgYnkgdGhlIHJhbmdlIG9mIHgNCg0Kbm9ybWFsaXplIDwtIGZ1bmN0aW9uKHgpew0KICByZXR1cm4gKCANCiAgICAoeCAtIG1pbih4KSkvKG1heCh4KSAtIG1pbih4KSkgDQogICAgICAgICAgICkNCn0NCmBgYA0KDQoNCk5vcm1hbGl6ZSBkYXRhDQpgYGB7cn0NCiNiYW5qaXJfZGF0YV9uIDwtIGFzLmRhdGEuZnJhbWUobGFwcGx5KGJhbmppcl9kYXRhWywxOjEzXSwgbm9ybWFsaXplKSkNCg0KI2Jhbmppcl9kYXRhX3ggPC0gbWVyZ2UoYmFuamlyX2RhdGFfbiwgYmFuamlyX2RhdGEkUFJFREgxLCBieT0iIikNCiMgbjBfdmFyIDwtIG5lYXJaZXJvVmFyKGJhbmppcl9kYXRhWywxOjE0XSkNCiMgYmFuamlyX2RhdGEgPC0gYmFuamlyX2RhdGFbLC1uMF92YXJdDQoNCmJhbmppcl9kYXRhX2ludHJhaW4gPC0gc2FtcGxlKG5yb3coYmFuamlyX2RhdGEpLCBucm93KGJhbmppcl9kYXRhKSowLjgpDQpiYW5qaXJfZGF0YV90cmFpbiA8LSBiYW5qaXJfZGF0YVtiYW5qaXJfZGF0YV9pbnRyYWluLCBdDQpiYW5qaXJfZGF0YV90ZXN0IDwtIGJhbmppcl9kYXRhWy1iYW5qaXJfZGF0YV9pbnRyYWluLCBdDQoNCmBgYA0KDQoNCmBgYHtyfQ0KcHJvcC50YWJsZSh0YWJsZShiYW5qaXJfZGF0YV90cmFpbiRQUkVESDEpKQ0KDQpwcm9wLnRhYmxlKHRhYmxlKGJhbmppcl9kYXRhX3Rlc3QkUFJFREgxKSkNCmBgYA0KDQoNCmBgYHtyfQ0KY3RybCA8LSB0cmFpbkNvbnRyb2wobWV0aG9kPSJyZXBlYXRlZGN2IiwgbnVtYmVyPTUsIHJlcGVhdHM9MykNCmJhbmppcl9kYXRhX2ZvcmVzdCA8LSB0cmFpbihQUkVESDEgfiAuLCBkYXRhPWJhbmppcl9kYXRhX3RyYWluLCBtZXRob2Q9InJmIiwgdHJDb250cm9sID0gY3RybCkNCmBgYA0KDQoNCg0KYGBge3J9DQpiYW5qaXJfZGF0YV9mb3Jlc3QNCmBgYA0KDQpgYGB7cn0NCnRhYmxlKHByZWRpY3QoYmFuamlyX2RhdGFfZm9yZXN0LCBiYW5qaXJfZGF0YV90ZXN0WywtMTVdKSwgYmFuamlyX2RhdGFfdGVzdFssMTVdKQ0KYGBgDQoNCg0K</div>
 
 
 

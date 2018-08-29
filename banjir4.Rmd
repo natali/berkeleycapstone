@@ -14,7 +14,85 @@ library(caret)
 
 Lorem ipsum
 
-## Data
+## Basic data from NOAA
+
+
+```{r}
+banjir_data <- read.csv("data/CLEAN DATASET BANJIR.csv", stringsAsFactors = FALSE)
+
+banjir_data$PREDH1 <- factor(banjir_data$PREDH1, levels = c("0", "1"), labels = c("Normal", "Banjir"))
+banjir_data$PREDH2 <- factor(banjir_data$PREDH2, levels = c("0", "1", "2", "3"), labels = c("Normal", "H-2", "H-1", "Banjir"))
+
+banjir_data$MXSPD <- as.numeric(banjir_data$MXSPD)
+banjir_data$PRCP <- as.numeric(banjir_data$PRCP)
+```
+
+Now, let's use PREDH1, remove PREDH2
+```{r}
+banjir_data <- subset(banjir_data, select = -c(STN, YEARMODA, PREDH2, FOG, SNOW, HAIL))
+
+set.seed(3)
+
+banjir_data <- banjir_data[sample(nrow(banjir_data)),]
+
+table(banjir_data$PREDH1)
+
+```
+
+
+
+```{r}
+# Creating a normalize() function, which takes a vector x and for each value in that vector, subtracts the minimum value in x and divides by the range of x
+
+normalize <- function(x){
+  return ( 
+    (x - min(x))/(max(x) - min(x)) 
+           )
+}
+```
+
+
+Normalize data
+```{r}
+#banjir_data_n <- as.data.frame(lapply(banjir_data[,1:13], normalize))
+
+#banjir_data_x <- merge(banjir_data_n, banjir_data$PREDH1, by="")
+# n0_var <- nearZeroVar(banjir_data[,1:14])
+# banjir_data <- banjir_data[,-n0_var]
+
+banjir_data_intrain <- sample(nrow(banjir_data), nrow(banjir_data)*0.8)
+banjir_data_train <- banjir_data[banjir_data_intrain, ]
+banjir_data_test <- banjir_data[-banjir_data_intrain, ]
+
+```
+
+
+```{r}
+prop.table(table(banjir_data_train$PREDH1))
+
+prop.table(table(banjir_data_test$PREDH1))
+```
+
+
+```{r}
+ctrl <- trainControl(method="repeatedcv", number=5, repeats=3)
+banjir_data_forest <- train(PREDH1 ~ ., data=banjir_data_train, method="rf", trControl = ctrl)
+```
+
+
+
+```{r}
+banjir_data_forest
+```
+
+```{r}
+table(predict(banjir_data_forest, banjir_data_test[,-14]), banjir_data_test[,14])
+```
+
+
+
+
+## Data with Pintu Air (water gate data)
 
 Here are the data sources
 
