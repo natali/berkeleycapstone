@@ -111,7 +111,7 @@ banjir_data <- banjir_data[sample(nrow(banjir_data)),]
 
 
 
-```{r, echo = false}
+```{r, echo=FALSE}
 # Creating a normalize() function, which takes a vector x and for each value in that vector, subtracts the minimum value in x and divides by the range of x
 
 normalize <- function(x){
@@ -263,7 +263,7 @@ banjir_data <- banjir_data[sample(nrow(banjir_data)),]
 
 
 
-```{r, echo = false}
+```{r, echo=FALSE}
 # Creating a normalize() function, which takes a vector x and for each value in that vector, subtracts the minimum value in x and divides by the range of x
 
 normalize <- function(x){

@@ -31,7 +31,7 @@
       // Author information
       presenters: [
             {
-        name:  'The Indo Guys (and Gal)' ,
+        name:  'The Indo Guys (and a Gal)' ,
         company: '',
         gplus: '',
         twitter: '',
@@ -98,15 +98,51 @@
           </hgroup>
   </slide>
 
-<slide class=""><hgroup><h2>Problem</h2></hgroup><article  id="problem">
+<slide class=""><hgroup><h2>Background</h2></hgroup><article  id="background">
+
+<p>Jakarta flood has become somekind of a tradition, where flood can happen yearly and can go for over 2 weeks on every occurence Research found that there are a few reasons for the flood: - high precipitation - humidity level - tide level - land subsidence</p>
+
+</article></slide><slide class=""><hgroup><h2>Problem Statement</h2></hgroup><article  id="problem-statement" class="flexbox vcenter">
+
+<p>Can we predict if flooding is going to happen given the weather data H-1 and H-2 prior of the event itself?</p>
+
+</article></slide><slide class=""><hgroup><h2>Expected Result</h2></hgroup><article  id="expected-result" class="flexbox vcenter">
+
+<p>To confirm if there is statistical significance that we are able predict the flood before it happens, based on the weather data</p>
+
+</article></slide><slide class=""><hgroup><h2>Data Sources</h2></hgroup><article  id="data-sources">
+
+<p><a href='https://data.go.id/dataset/curah-hujan-dan-hari-hujan-menurut-bulan-dki-jakarta' title=''>https://data.go.id/dataset/curah-hujan-dan-hari-hujan-menurut-bulan-dki-jakarta</a> <a href='https://bpbd.jakarta.go.id/waterlevel/' title=''>https://bpbd.jakarta.go.id/waterlevel/</a> <a href='http://data.jakarta.go.id/group/lingkungan-hidup' title=''>http://data.jakarta.go.id/group/lingkungan-hidup</a></p>
+
+</article></slide><slide class=""><hgroup><h2>Basic data from NOAA</h2></hgroup><article  id="basic-data-from-noaa" class="flexbox vcenter">
 
 </article></slide><slide class=""><hgroup><h2>Data source from NOAA</h2></hgroup><article  id="data-source-from-noaa">
 
-<p>Here are the data retrieved from NOAA</p>
+<p>Data source sample</p>
+
+<pre class = 'prettyprint lang-r'>banjir_data &lt;- read.csv(&quot;data/CLEAN DATASET BANJIR.csv&quot;, stringsAsFactors = FALSE)
+head(banjir_data)</pre>
+
+<pre >##      STN YEARMODA TEMP DEWP    SLP    STP VISIB WDSP MXSPD  MAX  MIN PRCP
+## 1 967450 20130101 81.0 75.1 1008.9 1008.4   4.2  6.0   9.9 89.2 75.9 0.08
+## 2 967450 20130102 82.7 75.4 1010.1 1009.7   4.9  3.5   8.0 88.5 76.6 0.00
+## 3 967450 20130103 83.6 75.8 1008.7 1008.2   4.2  4.4   9.9 90.7 77.9 0.04
+## 4 967450 20130104 78.6 73.4 1008.1 1007.7   4.0  6.8   9.9 86.4 75.6 0.26
+## 5 967450 20130105 80.5 74.9 1007.6 1007.2   4.0  5.7  11.1 87.4 75.2 0.20
+## 6 967450 20130106 80.3 73.9 1009.1 1008.6   4.2  8.4  12.0 85.6 73.0 0.20
+##   FOG RAIN SNOW HAIL THUNDER TORNADO PREDH1 PREDH2
+## 1   0    1    0    0       1       1      0      0
+## 2   0    0    0    0       0       0      0      0
+## 3   0    1    0    0       0       0      0      0
+## 4   0    1    0    0       1       1      0      0
+## 5   0    1    0    0       0       0      0      0
+## 6   0    1    0    0       0       0      0      0</pre>
+
+</article></slide><slide class=""><hgroup><h2>Data source explanation</h2></hgroup><article  id="data-source-explanation">
+
+<p>Breakdown of the data structure</p>
 
 <table class = 'rmdtable'>
-<col width="8%" />
-<col width="9%" />
 <tr class="header">
 <th align="left">CODE</th>
 <th align="right">Description</th>
@@ -131,25 +167,43 @@
 <td align="left">SLP</td>
 <td align="right">Mean sea level pressure for the day in millibars to tenths.</td>
 </tr>
-<tr class="even">
+</table>
+
+<table class = 'rmdtable'>
+<col width="8%" />
+<col width="9%" />
+<tr class="header">
+<th align="left">CODE</th>
+<th align="right">Description</th>
+</tr>
+<tr class="odd">
 <td align="left">STP</td>
 <td align="right">Mean station pressure for the day in millibars to tenths.</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">VISIB</td>
 <td align="right">Mean visibility for the day in miles to tenths.</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">WDSP</td>
 <td align="right">Mean wind speed for the day in knots to tenths.</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">MXSPD</td>
 <td align="right">Maximum sustained wind speed reported for the day in knots to tenths.</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">GUST</td>
 <td align="right">Maximum wind gust reported for the day in knots to tenths.</td>
+</tr>
+</table>
+
+<table class = 'rmdtable'>
+<col width="8%" />
+<col width="9%" />
+<tr class="header">
+<th align="left">CODE</th>
+<th align="right">Description</th>
 </tr>
 <tr class="odd">
 <td align="left">MAX</td>
@@ -167,51 +221,71 @@
 <td align="left">SNDP</td>
 <td align="right">Snow depth in inches to tenths&#8211;last report for the day if reported more than once.</td>
 </tr>
+<tr class="odd">
+<td align="left">FRSHTT</td>
+<td align="right">Indicators for the occurrence during the day of: Fog (&#39;F&#39; - 1st digit). Rain or Drizzle (&#39;R&#39; - 2nd digit). Snow or Ice Pellets (&#39;S&#39; - 3rd digit). Hail (&#39;H&#39; - 4th digit). Thunder (&#39;T&#39; - 5th digit). Tornado or Funnel Cloud (&#39;T&#39; - 6th digit).</td>
+</tr>
 </table>
 
-<p>FRSHTT | Indicators for the occurrence during the day of: Fog (&#39;F&#39; - 1st digit). Rain or Drizzle (&#39;R&#39; - 2nd digit). Snow or Ice Pellets (&#39;S&#39; - 3rd digit). Hail (&#39;H&#39; - 4th digit). Thunder (&#39;T&#39; - 5th digit). Tornado or Funnel Cloud (&#39;T&#39; - 6th digit).</p>
+</article></slide><slide class=""><hgroup><h2>ETL the data</h2></hgroup><article  id="etl-the-data">
 
-<pre class = 'prettyprint lang-r'>banjir_data &lt;- read.csv(&quot;data/CLEAN DATASET BANJIR.csv&quot;, stringsAsFactors = FALSE)
-head(banjir_data)</pre>
+<pre class = 'prettyprint lang-r'>summary(banjir_data)</pre>
 
-<pre >##      STN YEARMODA TEMP DEWP    SLP    STP VISIB WDSP MXSPD  MAX  MIN PRCP
-## 1 967450 20130101 81.0 75.1 1008.9 1008.4   4.2  6.0   9.9 89.2 75.9 0.08
-## 2 967450 20130102 82.7 75.4 1010.1 1009.7   4.9  3.5   8.0 88.5 76.6 0.00
-## 3 967450 20130103 83.6 75.8 1008.7 1008.2   4.2  4.4   9.9 90.7 77.9 0.04
-## 4 967450 20130104 78.6 73.4 1008.1 1007.7   4.0  6.8   9.9 86.4 75.6 0.26
-## 5 967450 20130105 80.5 74.9 1007.6 1007.2   4.0  5.7  11.1 87.4 75.2 0.20
-## 6 967450 20130106 80.3 73.9 1009.1 1008.6   4.2  8.4  12.0 85.6 73.0 0.20
-##   FOG RAIN SNOW HAIL THUNDER TORNADO PREDH1 PREDH2
-## 1   0    1    0    0       1       1      0      0
-## 2   0    0    0    0       0       0      0      0
-## 3   0    1    0    0       0       0      0      0
-## 4   0    1    0    0       1       1      0      0
-## 5   0    1    0    0       0       0      0      0
-## 6   0    1    0    0       0       0      0      0</pre>
+<pre >##       STN            YEARMODA             TEMP            DEWP      
+##  Min.   :967450   Min.   :20130101   Min.   :75.20   Min.   :64.10  
+##  1st Qu.:967450   1st Qu.:20140330   1st Qu.:82.70   1st Qu.:73.50  
+##  Median :967450   Median :20150310   Median :84.00   Median :74.50  
+##  Mean   :967450   Mean   :20146589   Mean   :83.73   Mean   :74.26  
+##  3rd Qu.:967450   3rd Qu.:20160130   3rd Qu.:85.00   3rd Qu.:75.40  
+##  Max.   :967450   Max.   :20161231   Max.   :88.60   Max.   :78.60  
+##       SLP            STP           VISIB            WDSP       
+##  Min.   :1006   Min.   :1006   Min.   :3.000   Min.   : 0.400  
+##  1st Qu.:1009   1st Qu.:1009   1st Qu.:4.000   1st Qu.: 1.900  
+##  Median :1010   Median :1010   Median :4.200   Median : 2.500  
+##  Mean   :1010   Mean   :1010   Mean   :4.228   Mean   : 2.642  
+##  3rd Qu.:1011   3rd Qu.:1011   3rd Qu.:4.300   3rd Qu.: 3.300  
+##  Max.   :1015   Max.   :1014   Max.   :5.600   Max.   :12.400  
+##      MXSPD            MAX              MIN             PRCP       
+##  Min.   : 2.90   Min.   : 76.60   Min.   :61.20   Min.   :0.0000  
+##  1st Qu.: 5.10   1st Qu.: 88.90   1st Qu.:77.00   1st Qu.:0.0000  
+##  Median : 6.00   Median : 90.70   Median :78.10   Median :0.0000  
+##  Mean   : 6.69   Mean   : 90.37   Mean   :77.91   Mean   :0.1293  
+##  3rd Qu.: 8.00   3rd Qu.: 92.10   3rd Qu.:79.20   3rd Qu.:0.0100  
+##  Max.   :28.00   Max.   :105.10   Max.   :82.00   Max.   :8.4300  
+##       FOG         RAIN             SNOW        HAIL          
+##  Min.   :0   Min.   :0.0000   Min.   :0   Min.   :0.0000000  
+##  1st Qu.:0   1st Qu.:0.0000   1st Qu.:0   1st Qu.:0.0000000  
+##  Median :0   Median :0.0000   Median :0   Median :0.0000000  
+##  Mean   :0   Mean   :0.2565   Mean   :0   Mean   :0.0008143  
+##  3rd Qu.:0   3rd Qu.:1.0000   3rd Qu.:0   3rd Qu.:0.0000000  
+##  Max.   :0   Max.   :1.0000   Max.   :0   Max.   :1.0000000  
+##     THUNDER          TORNADO          PREDH1        PREDH2   
+##  Min.   :0.0000   Min.   :0.0000   Normal:1025   Normal:877  
+##  1st Qu.:0.0000   1st Qu.:0.0000   Banjir: 203   H-2   : 68  
+##  Median :0.0000   Median :0.0000                 H-1   : 80  
+##  Mean   :0.1303   Mean   :0.1303                 Banjir:203  
+##  3rd Qu.:0.0000   3rd Qu.:0.0000                             
+##  Max.   :1.0000   Max.   :1.0000</pre>
 
-<p>Now, let&#39;s use PREDH1, remove PREDH2</p>
+<p>Our source of data consist of banjir (Flood) and Normal (no flooding)</p>
 
-<pre class = 'prettyprint lang-r'>banjir_data &lt;- subset(banjir_data, select = -c(STN, YEARMODA, PREDH2, FOG, SNOW, HAIL))
-
-set.seed(3)
-
-banjir_data &lt;- banjir_data[sample(nrow(banjir_data)),]
-
-table(banjir_data$PREDH1)</pre>
+<pre class = 'prettyprint lang-r'>table(banjir_data$PREDH1)</pre>
 
 <pre >## 
 ## Normal Banjir 
 ##   1025    203</pre>
 
-<pre class = 'prettyprint lang-r'># Creating a normalize() function, which takes a vector x and for each value in that vector, subtracts the minimum value in x and divides by the range of x
+</article></slide><slide class=""><hgroup><h2>Data preparation</h2></hgroup><article  id="data-preparation">
 
-normalize &lt;- function(x){
-  return ( 
-    (x - min(x))/(max(x) - min(x)) 
-           )
-}</pre>
+<p>We remove unnecessary data</p>
 
-<p>Normalize data</p>
+<pre class = 'prettyprint lang-r'>banjir_data &lt;- subset(banjir_data, select = -c(STN, YEARMODA, PREDH2, FOG, SNOW, HAIL))</pre>
+
+<p>Also, we randomize from time series to avoid uneven spread data</p>
+
+<pre class = 'prettyprint lang-r'>banjir_data &lt;- banjir_data[sample(nrow(banjir_data)),]</pre>
+
+<p>We split the data into training data (80%) and test data (20%)</p>
 
 <pre class = 'prettyprint lang-r'>#banjir_data_n &lt;- as.data.frame(lapply(banjir_data[,1:13], normalize))
 
@@ -223,20 +297,101 @@ banjir_data_intrain &lt;- sample(nrow(banjir_data), nrow(banjir_data)*0.8)
 banjir_data_train &lt;- banjir_data[banjir_data_intrain, ]
 banjir_data_test &lt;- banjir_data[-banjir_data_intrain, ]</pre>
 
+</article></slide><slide class=""><hgroup><h2>The data ratio between the train data and test data</h2></hgroup><article  id="the-data-ratio-between-the-train-data-and-test-data">
+
 <pre class = 'prettyprint lang-r'>prop.table(table(banjir_data_train$PREDH1))</pre>
 
 <pre >## 
 ##    Normal    Banjir 
-## 0.8207739 0.1792261</pre>
+## 0.8523422 0.1476578</pre>
 
 <pre class = 'prettyprint lang-r'>prop.table(table(banjir_data_test$PREDH1))</pre>
 
 <pre >## 
 ##    Normal    Banjir 
-## 0.8902439 0.1097561</pre>
+## 0.7642276 0.2357724</pre>
 
-<pre class = 'prettyprint lang-r'>ctrl &lt;- trainControl(method=&quot;repeatedcv&quot;, number=5, repeats=3)
-banjir_data_forest &lt;- train(PREDH1 ~ ., data=banjir_data_train, method=&quot;rf&quot;, trControl = ctrl)</pre>
+<p>Using set.seed(1), we see even spread of Normal and Banjir for both of data</p>
+
+</article></slide><slide class=""><hgroup><h2>Random forest function</h2></hgroup><article  id="random-forest-function">
+
+<p>Here we use RepeatedCV</p>
+
+<pre class = 'prettyprint lang-r'>rdsdata1 &lt;- &quot;data/randomforest1.rds&quot;
+
+# conditional. Remove rdsdata file to run this logic
+if (!file.exists(rdsdata1)) {
+   
+  # Manual Search
+  mtry_base &lt;- sqrt(ncol(banjir_data_train))
+  seed &lt;- 9
+  metric &lt;- &quot;Accuracy&quot;
+  tunegrid &lt;- expand.grid(.mtry=c(mtry_base ^ 0, mtry_base ^ 1, mtry_base * 2, mtry_base ^ 2))
+  modellist1 &lt;- list()
+  repeats &lt;- 10
+  method &lt;- &quot;repeatedcv&quot;
+  
+  for (ntree in c(25, 50, 100, 200, 500, 1000)) {
+    control &lt;- trainControl(method=method, number=10, repeats=repeats)
+    banjir_forest_ntree &lt;- train(PREDH1~., data=banjir_data_train, method=&quot;rf&quot;, metric=metric, tuneGrid=tunegrid, trControl=control, ntree=ntree)
+    key &lt;- toString(ntree)
+    modellist1[[key]] &lt;- banjir_forest_ntree
+  }
+  saveRDS(modellist1, file = rdsdata1)
+
+} else {
+  modellist1 &lt;-readRDS(rdsdata1)
+}
+
+
+#ctrl &lt;- trainControl(method=&quot;repeatedcv&quot;, number=5, repeats=3)
+#banjir_data_forest &lt;- train(PREDH1 ~ ., data=banjir_data_train, method=&quot;rf&quot;, trControl = ctrl)</pre>
+
+<pre class = 'prettyprint lang-r'>results &lt;- resamples(modellist1)
+
+summary(results)</pre>
+
+<pre >## 
+## Call:
+## summary.resamples(object = results)
+## 
+## Models: 25, 50, 100, 200, 500, 1000 
+## Number of resamples: 100 
+## 
+## Accuracy 
+##           Min.   1st Qu.    Median      Mean   3rd Qu.      Max. NA&#39;s
+## 25   0.8367347 0.8484848 0.8556701 0.8527579 0.8571429 0.8673469    0
+## 50   0.8144330 0.8453608 0.8571429 0.8525571 0.8604342 0.8865979    0
+## 100  0.8383838 0.8484848 0.8520775 0.8521615 0.8571429 0.8673469    0
+## 200  0.8144330 0.8383838 0.8484848 0.8530742 0.8673469 0.9081633    0
+## 500  0.8080808 0.8469388 0.8520775 0.8534013 0.8659794 0.8877551    0
+## 1000 0.8163265 0.8469388 0.8571429 0.8535672 0.8663213 0.8865979    0
+## 
+## Kappa 
+##             Min.    1st Qu.     Median        Mean   3rd Qu.      Max.
+## 25   -0.01962158 0.00000000 0.00000000 0.014357661 0.0000000 0.1165049
+## 50   -0.06854345 0.06382979 0.14038385 0.129944855 0.1946903 0.3508197
+## 100  -0.01941748 0.00000000 0.00000000 0.005137561 0.0000000 0.1165049
+## 200  -0.06779661 0.02296702 0.11469545 0.129419249 0.1977737 0.4878049
+## 500  -0.06814310 0.00000000 0.09224599 0.101567701 0.1723314 0.3811711
+## 1000 -0.06779661 0.00000000 0.10026249 0.103246396 0.1808511 0.3734586
+##      NA&#39;s
+## 25      0
+## 50      0
+## 100     0
+## 200     0
+## 500     0
+## 1000    0</pre>
+
+<pre class = 'prettyprint lang-r'>dotplot(results)</pre>
+
+<p><img src="data:image/png;base64,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" width="720" /></p>
+
+<pre class = 'prettyprint lang-r'>banjir_data_forest &lt;- modellist1$`1000`</pre>
+
+</article></slide><slide class=""><hgroup><h2>Random forest</h2></hgroup><article  id="random-forest">
+
+<p>Result of the random forest function</p>
 
 <pre class = 'prettyprint lang-r'>banjir_data_forest</pre>
 
@@ -247,62 +402,103 @@ banjir_data_forest &lt;- train(PREDH1 ~ ., data=banjir_data_train, method=&quot;
 ##   2 classes: &#39;Normal&#39;, &#39;Banjir&#39; 
 ## 
 ## No pre-processing
-## Resampling: Cross-Validated (5 fold, repeated 3 times) 
-## Summary of sample sizes: 786, 785, 786, 785, 786, 786, ... 
+## Resampling: Cross-Validated (10 fold, repeated 10 times) 
+## Summary of sample sizes: 884, 883, 883, 884, 884, 885, ... 
 ## Resampling results across tuning parameters:
 ## 
-##   mtry  Accuracy   Kappa     
-##    2    0.8143289  0.06665061
-##    7    0.8068580  0.09411487
-##   13    0.8048154  0.10581147
+##   mtry       Accuracy   Kappa       
+##    1.000000  0.8518511  0.0009672718
+##    3.741657  0.8535672  0.1032463964
+##    7.483315  0.8529477  0.1232757983
+##   14.000000  0.8502102  0.1310099955
 ## 
 ## Accuracy was used to select the optimal model using the largest value.
-## The final value used for the model was mtry = 2.</pre>
+## The final value used for the model was mtry = 3.741657.</pre>
 
-<pre class = 'prettyprint lang-r'>table(predict(banjir_data_forest, banjir_data_test[,-14]), banjir_data_test[,14])</pre>
+</article></slide><slide class=""><hgroup><h2>Prediction based on the formula</h2></hgroup><article  id="prediction-based-on-the-formula">
+
+<p>We try to see the result of the prediction</p>
+
+<pre class = 'prettyprint lang-r'>banjir_rf &lt;- table(predict(banjir_data_forest, banjir_data_test[,-14]), banjir_data_test[,14])
+
+banjir_rf</pre>
 
 <pre >##         
 ##          Normal Banjir
-##   Normal    214     24
-##   Banjir      5      3</pre>
+##   Normal    184     54
+##   Banjir      4      4</pre>
 
-</article></slide><slide class=""><hgroup><h2>Data with Pintu Air (water gate data)</h2></hgroup><article  id="data-with-pintu-air-water-gate-data">
+<p>Accuracy is:</p>
 
-<p>Here are the data sources</p>
+<pre class = 'prettyprint lang-r'>(banjir_rf[&quot;Normal&quot;, &quot;Normal&quot;] + banjir_rf[&quot;Banjir&quot;, &quot;Banjir&quot;]) / sum(banjir_rf)</pre>
 
-<pre class = 'prettyprint lang-r'>banjir_data &lt;- read.csv(&quot;data/CLEAN DATASET BANJIR2.csv&quot;, stringsAsFactors = FALSE)
+<pre >## [1] 0.7642276</pre>
 
-banjir_data$PREDH1 &lt;- factor(banjir_data$PREDH1, levels = c(&quot;0&quot;, &quot;1&quot;), labels = c(&quot;Normal&quot;, &quot;Banjir&quot;))
-banjir_data$PREDH2 &lt;- factor(banjir_data$PREDH2, levels = c(&quot;0&quot;, &quot;1&quot;, &quot;2&quot;, &quot;3&quot;), labels = c(&quot;Normal&quot;, &quot;H-2&quot;, &quot;H-1&quot;, &quot;Banjir&quot;))
+</article></slide><slide class=""><hgroup><h2>What if we add Water Gate</h2></hgroup><article  id="what-if-we-add-water-gate">
 
-banjir_data$MXSPD &lt;- as.numeric(banjir_data$MXSPD)
-banjir_data$PRCP &lt;- as.numeric(banjir_data$PRCP)</pre>
+<p>We found data of water level in the Katulampa water gate</p>
 
-</article></slide><slide class=""><hgroup><h2>Cleaning up data</h2></hgroup><article  id="cleaning-up-data">
+<pre class = 'prettyprint lang-r'>banjir_data &lt;- read.csv(&quot;data/CLEAN DATASET BANJIR2.csv&quot;, stringsAsFactors = FALSE)</pre>
 
-<p>Removing unnecessary data sets, such as Station, Year-Month-Day, Fog, Snow and Hail data</p>
+</article></slide><slide class=""><hgroup><h2>ETL the data</h2></hgroup><article  id="etl-the-data-1">
 
-<pre class = 'prettyprint lang-r'>banjir_data &lt;- subset(banjir_data, select = -c(STN, YEARMODA, PREDH2, FOG, SNOW, HAIL))</pre>
+<pre class = 'prettyprint lang-r'>summary(banjir_data)</pre>
 
-<pre class = 'prettyprint lang-r'>set.seed(3)
+<pre >##       STN            YEARMODA             TEMP            DEWP      
+##  Min.   :967450   Min.   :20130101   Min.   :76.30   Min.   :67.60  
+##  1st Qu.:967450   1st Qu.:20130312   1st Qu.:82.50   1st Qu.:73.95  
+##  Median :967450   Median :20130605   Median :84.10   Median :74.70  
+##  Mean   :967450   Mean   :20130813   Mean   :83.57   Mean   :74.51  
+##  3rd Qu.:967450   3rd Qu.:20130920   3rd Qu.:84.90   3rd Qu.:75.40  
+##  Max.   :967450   Max.   :20140109   Max.   :88.60   Max.   :78.20  
+##       SLP            STP           VISIB            WDSP       
+##  Min.   :1006   Min.   :1006   Min.   :3.600   Min.   : 0.400  
+##  1st Qu.:1009   1st Qu.:1008   1st Qu.:4.300   1st Qu.: 1.900  
+##  Median :1010   Median :1009   Median :4.400   Median : 2.600  
+##  Mean   :1010   Mean   :1009   Mean   :4.418   Mean   : 2.886  
+##  3rd Qu.:1011   3rd Qu.:1010   3rd Qu.:4.600   3rd Qu.: 3.550  
+##  Max.   :1013   Max.   :1012   Max.   :5.600   Max.   :12.400  
+##      MXSPD             MAX             MIN             PRCP       
+##  Min.   : 2.900   Min.   :80.60   Min.   :72.50   Min.   :0.0000  
+##  1st Qu.: 5.100   1st Qu.:88.50   1st Qu.:76.10   1st Qu.:0.0000  
+##  Median : 7.000   Median :90.70   Median :77.20   Median :0.0000  
+##  Mean   : 7.325   Mean   :90.24   Mean   :77.29   Mean   :0.1239  
+##  3rd Qu.: 8.900   3rd Qu.:92.10   3rd Qu.:78.70   3rd Qu.:0.0000  
+##  Max.   :28.000   Max.   :95.40   Max.   :81.50   Max.   :3.0700  
+##       FOG         RAIN            SNOW        HAIL      THUNDER      
+##  Min.   :0   Min.   :0.000   Min.   :0   Min.   :0   Min.   :0.0000  
+##  1st Qu.:0   1st Qu.:0.000   1st Qu.:0   1st Qu.:0   1st Qu.:0.0000  
+##  Median :0   Median :0.000   Median :0   Median :0   Median :0.0000  
+##  Mean   :0   Mean   :0.214   Mean   :0   Mean   :0   Mean   :0.1587  
+##  3rd Qu.:0   3rd Qu.:0.000   3rd Qu.:0   3rd Qu.:0   3rd Qu.:0.0000  
+##  Max.   :0   Max.   :1.000   Max.   :0   Max.   :0   Max.   :1.0000  
+##     TORNADO         tinggi_air        PREDH1       PREDH2   
+##  Min.   :0.0000   Min.   : 10.00   Normal:222   Normal:191  
+##  1st Qu.:0.0000   1st Qu.: 20.00   Banjir: 49   H-2   : 15  
+##  Median :0.0000   Median : 29.58                H-1   : 16  
+##  Mean   :0.1587   Mean   : 30.12                Banjir: 49  
+##  3rd Qu.:0.0000   3rd Qu.: 37.08                            
+##  Max.   :1.0000   Max.   :114.58</pre>
 
-banjir_data &lt;- banjir_data[sample(nrow(banjir_data)),]
+<p>Our source of data consist of banjir (Flood) and Normal (no flooding)</p>
 
-table(banjir_data$PREDH1)</pre>
+<pre class = 'prettyprint lang-r'>table(banjir_data$PREDH1)</pre>
 
 <pre >## 
 ## Normal Banjir 
 ##    222     49</pre>
 
-<pre class = 'prettyprint lang-r'># Creating a normalize() function, which takes a vector x and for each value in that vector, subtracts the minimum value in x and divides by the range of x
+</article></slide><slide class=""><hgroup><h2>Data preparation</h2></hgroup><article  id="data-preparation-1">
 
-normalize &lt;- function(x){
-  return ( 
-    (x - min(x))/(max(x) - min(x)) 
-           )
-}</pre>
+<p>We remove unnecessary data</p>
 
-<p>Normalize data</p>
+<pre class = 'prettyprint lang-r'>banjir_data &lt;- subset(banjir_data, select = -c(STN, YEARMODA, PREDH2, FOG, SNOW, HAIL))</pre>
+
+<p>Also, we randomize from time series to avoid uneven spread data</p>
+
+<pre class = 'prettyprint lang-r'>banjir_data &lt;- banjir_data[sample(nrow(banjir_data)),]</pre>
+
+<p>We split the data into training data (80%) and test data (20%)</p>
 
 <pre class = 'prettyprint lang-r'>#banjir_data_n &lt;- as.data.frame(lapply(banjir_data[,1:13], normalize))
 
@@ -314,20 +510,94 @@ banjir_data_intrain &lt;- sample(nrow(banjir_data), nrow(banjir_data)*0.8)
 banjir_data_train &lt;- banjir_data[banjir_data_intrain, ]
 banjir_data_test &lt;- banjir_data[-banjir_data_intrain, ]</pre>
 
+</article></slide><slide class=""><hgroup><h2>The data ratio between the train data and test data</h2></hgroup><article  id="the-data-ratio-between-the-train-data-and-test-data-1">
+
 <pre class = 'prettyprint lang-r'>prop.table(table(banjir_data_train$PREDH1))</pre>
 
 <pre >## 
 ##    Normal    Banjir 
-## 0.8101852 0.1898148</pre>
+## 0.8148148 0.1851852</pre>
 
 <pre class = 'prettyprint lang-r'>prop.table(table(banjir_data_test$PREDH1))</pre>
 
 <pre >## 
 ##    Normal    Banjir 
-## 0.8545455 0.1454545</pre>
+## 0.8363636 0.1636364</pre>
 
-<pre class = 'prettyprint lang-r'>ctrl &lt;- trainControl(method=&quot;repeatedcv&quot;, number=5, repeats=3)
-banjir_data_forest &lt;- train(PREDH1 ~ ., data=banjir_data_train, method=&quot;rf&quot;, trControl = ctrl)</pre>
+<p>Using set.seed(1), we see even spread of Normal and Banjir for both of data</p>
+
+</article></slide><slide class=""><hgroup><h2>Random forest function</h2></hgroup><article  id="random-forest-function-1">
+
+<p>Here we use RepeatedCV</p>
+
+<pre class = 'prettyprint lang-r'>rdsdata2 &lt;- &quot;data/randomforest2.rds&quot;
+
+# conditional. Remove rdsdata file to run this logic
+if (!file.exists(rdsdata2)) {
+   
+  # Manual Search
+  mtry_base &lt;- sqrt(ncol(banjir_data_train))
+  seed &lt;- 9
+  metric &lt;- &quot;Accuracy&quot;
+  tunegrid &lt;- expand.grid(.mtry=c(mtry_base ^ 0, mtry_base ^ 1, mtry_base * 2, mtry_base ^ 2))
+  modellist2 &lt;- list()
+  repeats &lt;- 10
+  method &lt;- &quot;repeatedcv&quot;
+  
+  for (ntree in c(25, 50, 100, 200, 500, 1000)) {
+    control &lt;- trainControl(method=method, number=10, repeats=repeats)
+    banjir_forest_ntree &lt;- train(PREDH1~., data=banjir_data_train, method=&quot;rf&quot;, metric=metric, tuneGrid=tunegrid, trControl=control, ntree=ntree)
+    key &lt;- toString(ntree)
+    modellist2[[key]] &lt;- banjir_forest_ntree
+  }
+  saveRDS(modellist2, file = rdsdata2)
+
+} else {
+  modellist2 &lt;-readRDS(rdsdata2)
+}
+
+
+#ctrl &lt;- trainControl(method=&quot;repeatedcv&quot;, number=5, repeats=3)
+#banjir_data_forest &lt;- train(PREDH1 ~ ., data=banjir_data_train, method=&quot;rf&quot;, trControl = ctrl)</pre>
+
+<pre class = 'prettyprint lang-r'>results &lt;- resamples(modellist2)
+
+summary(results)</pre>
+
+<pre >## 
+## Call:
+## summary.resamples(object = results)
+## 
+## Models: 25, 50, 100, 200, 500, 1000 
+## Number of resamples: 100 
+## 
+## Accuracy 
+##           Min.   1st Qu.    Median      Mean   3rd Qu.      Max. NA&#39;s
+## 25   0.7272727 0.8181818 0.8636364 0.8616507 0.9090909 1.0000000    0
+## 50   0.7272727 0.8181818 0.8571429 0.8563872 0.9047619 1.0000000    0
+## 100  0.7272727 0.8181818 0.8636364 0.8640316 0.9047619 0.9545455    0
+## 200  0.7142857 0.8181818 0.8636364 0.8629992 0.9047619 1.0000000    0
+## 500  0.6666667 0.8181818 0.8571429 0.8555327 0.9047619 1.0000000    0
+## 1000 0.7272727 0.8181818 0.8636364 0.8609194 0.9047619 0.9545455    0
+## 
+## Kappa 
+##            Min.   1st Qu.    Median      Mean   3rd Qu.      Max. NA&#39;s
+## 25   -0.1578947 0.2447711 0.4615385 0.4171671 0.6118421 1.0000000    0
+## 50   -0.1379310 0.2299742 0.3888889 0.3837682 0.5939542 1.0000000    0
+## 100  -0.1379310 0.2380520 0.3529412 0.3537457 0.4695122 0.8607595    0
+## 200  -0.1290323 0.3225806 0.4615385 0.4322177 0.6111111 1.0000000    0
+## 500  -0.1290323 0.2222222 0.3720145 0.3679473 0.5822785 1.0000000    0
+## 1000 -0.1290323 0.2365900 0.4615385 0.3874056 0.5939542 0.8307692    0</pre>
+
+<pre class = 'prettyprint lang-r'>dotplot(results)</pre>
+
+<p><img src="data:image/png;base64,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" width="720" /></p>
+
+<pre class = 'prettyprint lang-r'>banjir_data_forest &lt;- modellist2$`200`</pre>
+
+</article></slide><slide class=""><hgroup><h2>Random forest</h2></hgroup><article  id="random-forest-1">
+
+<p>Result of the random forest function</p>
 
 <pre class = 'prettyprint lang-r'>banjir_data_forest</pre>
 
@@ -338,24 +608,42 @@ banjir_data_forest &lt;- train(PREDH1 ~ ., data=banjir_data_train, method=&quot;
 ##   2 classes: &#39;Normal&#39;, &#39;Banjir&#39; 
 ## 
 ## No pre-processing
-## Resampling: Cross-Validated (5 fold, repeated 3 times) 
-## Summary of sample sizes: 173, 173, 173, 172, 173, 172, ... 
+## Resampling: Cross-Validated (10 fold, repeated 10 times) 
+## Summary of sample sizes: 195, 195, 194, 195, 195, 194, ... 
 ## Resampling results across tuning parameters:
 ## 
-##   mtry  Accuracy   Kappa    
-##    2    0.8241720  0.2322203
-##    8    0.8209655  0.3356407
-##   14    0.8225511  0.3588878
+##   mtry       Accuracy   Kappa     
+##    1.000000  0.8462262  0.05754545
+##    3.872983  0.8593375  0.34114705
+##    7.745967  0.8601675  0.39604166
+##   15.000000  0.8629992  0.43221766
 ## 
 ## Accuracy was used to select the optimal model using the largest value.
-## The final value used for the model was mtry = 2.</pre>
+## The final value used for the model was mtry = 15.</pre>
 
-<pre class = 'prettyprint lang-r'>table(predict(banjir_data_forest, banjir_data_test[,-15]), banjir_data_test[,15])</pre>
+</article></slide><slide class=""><hgroup><h2>Prediction based on the formula</h2></hgroup><article  id="prediction-based-on-the-formula-1">
+
+<p>We try to see the result of the prediction</p>
+
+<pre class = 'prettyprint lang-r'>banjir_rf &lt;- table(predict(banjir_data_forest, banjir_data_test[,-15]), banjir_data_test[,15])
+table(banjir_data_test$PREDH1)</pre>
+
+<pre >## 
+## Normal Banjir 
+##     46      9</pre>
+
+<pre class = 'prettyprint lang-r'>banjir_rf</pre>
 
 <pre >##         
 ##          Normal Banjir
-##   Normal     47      5
-##   Banjir      0      3</pre></article></slide>
+##   Normal     46      0
+##   Banjir      0      9</pre>
+
+<p>Accuracy is:</p>
+
+<pre class = 'prettyprint lang-r'>(banjir_rf[&quot;Normal&quot;, &quot;Normal&quot;] + banjir_rf[&quot;Banjir&quot;, &quot;Banjir&quot;]) / sum(banjir_rf)</pre>
+
+<pre >## [1] 1</pre></article></slide>
 
 
   <slide class="backdrop"></slide>
