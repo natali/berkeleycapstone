@@ -17,7 +17,7 @@ Research found that there are a few reasons for the flood:
 - high precipitation
 - humidity level
 - tide level
-- declining land height
+- land subsidence
 
 ## Problem Statement {.flexbox .vcenter}
 
