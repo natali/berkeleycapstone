@@ -100,25 +100,145 @@
 
 <slide class=""><hgroup><h2>Problem</h2></hgroup><article  id="problem">
 
-<p>Lorem ipsum</p>
+</article></slide><slide class=""><hgroup><h2>Data source from NOAA</h2></hgroup><article  id="data-source-from-noaa">
 
-</article></slide><slide class=""><hgroup><h2>Basic data from NOAA</h2></hgroup><article  id="basic-data-from-noaa">
+<p>Here are the data retrieved from NOAA</p>
+
+<table class = 'rmdtable'>
+<col width="8%" />
+<col width="9%" />
+<tr class="header">
+<th align="left">CODE</th>
+<th align="right">Description</th>
+</tr>
+<tr class="odd">
+<td align="left">STN</td>
+<td align="right">Station number for the location.</td>
+</tr>
+<tr class="even">
+<td align="left">YEARMODA</td>
+<td align="right">The year, month and day.</td>
+</tr>
+<tr class="odd">
+<td align="left">TEMP</td>
+<td align="right">Mean temperature for the day in degrees Fahrenheit to tenths.</td>
+</tr>
+<tr class="even">
+<td align="left">DEWP</td>
+<td align="right">Mean dew point for the day in degrees Fahrenheit to tenths.</td>
+</tr>
+<tr class="odd">
+<td align="left">SLP</td>
+<td align="right">Mean sea level pressure for the day in millibars to tenths.</td>
+</tr>
+<tr class="even">
+<td align="left">STP</td>
+<td align="right">Mean station pressure for the day in millibars to tenths.</td>
+</tr>
+<tr class="odd">
+<td align="left">VISIB</td>
+<td align="right">Mean visibility for the day in miles to tenths.</td>
+</tr>
+<tr class="even">
+<td align="left">WDSP</td>
+<td align="right">Mean wind speed for the day in knots to tenths.</td>
+</tr>
+<tr class="odd">
+<td align="left">MXSPD</td>
+<td align="right">Maximum sustained wind speed reported for the day in knots to tenths.</td>
+</tr>
+<tr class="even">
+<td align="left">GUST</td>
+<td align="right">Maximum wind gust reported for the day in knots to tenths.</td>
+</tr>
+<tr class="odd">
+<td align="left">MAX</td>
+<td align="right">Maximum temperature reported during the day in Fahrenheit to tenths&#8211;time of max temp report varies by country and region, so this will sometimes not be the max for the calendar day.</td>
+</tr>
+<tr class="even">
+<td align="left">MIN</td>
+<td align="right">Minimum temperature reported during the day in Fahrenheit to tenths&#8211;time of min temp report varies by country and region, so this will sometimes not be the min for the calendar day.</td>
+</tr>
+<tr class="odd">
+<td align="left">PRCP</td>
+<td align="right">Total precipitation (rain and/or melted snow) reported during the day in inches and hundredths.</td>
+</tr>
+<tr class="even">
+<td align="left">SNDP</td>
+<td align="right">Snow depth in inches to tenths&#8211;last report for the day if reported more than once.</td>
+</tr>
+</table>
+
+<p>FRSHTT | Indicators for the occurrence during the day of: Fog (&#39;F&#39; - 1st digit). Rain or Drizzle (&#39;R&#39; - 2nd digit). Snow or Ice Pellets (&#39;S&#39; - 3rd digit). Hail (&#39;H&#39; - 4th digit). Thunder (&#39;T&#39; - 5th digit). Tornado or Funnel Cloud (&#39;T&#39; - 6th digit).</p>
+
+<pre class = 'prettyprint lang-r'>banjir_data &lt;- read.csv(&quot;data/CLEAN DATASET BANJIR.csv&quot;, stringsAsFactors = FALSE)
+head(banjir_data)</pre>
+
+<pre >##      STN YEARMODA TEMP DEWP    SLP    STP VISIB WDSP MXSPD  MAX  MIN PRCP
+## 1 967450 20130101 81.0 75.1 1008.9 1008.4   4.2  6.0   9.9 89.2 75.9 0.08
+## 2 967450 20130102 82.7 75.4 1010.1 1009.7   4.9  3.5   8.0 88.5 76.6 0.00
+## 3 967450 20130103 83.6 75.8 1008.7 1008.2   4.2  4.4   9.9 90.7 77.9 0.04
+## 4 967450 20130104 78.6 73.4 1008.1 1007.7   4.0  6.8   9.9 86.4 75.6 0.26
+## 5 967450 20130105 80.5 74.9 1007.6 1007.2   4.0  5.7  11.1 87.4 75.2 0.20
+## 6 967450 20130106 80.3 73.9 1009.1 1008.6   4.2  8.4  12.0 85.6 73.0 0.20
+##   FOG RAIN SNOW HAIL THUNDER TORNADO PREDH1 PREDH2
+## 1   0    1    0    0       1       1      0      0
+## 2   0    0    0    0       0       0      0      0
+## 3   0    1    0    0       0       0      0      0
+## 4   0    1    0    0       1       1      0      0
+## 5   0    1    0    0       0       0      0      0
+## 6   0    1    0    0       0       0      0      0</pre>
 
 <p>Now, let&#39;s use PREDH1, remove PREDH2</p>
+
+<pre class = 'prettyprint lang-r'>banjir_data &lt;- subset(banjir_data, select = -c(STN, YEARMODA, PREDH2, FOG, SNOW, HAIL))
+
+set.seed(3)
+
+banjir_data &lt;- banjir_data[sample(nrow(banjir_data)),]
+
+table(banjir_data$PREDH1)</pre>
 
 <pre >## 
 ## Normal Banjir 
 ##   1025    203</pre>
 
+<pre class = 'prettyprint lang-r'># Creating a normalize() function, which takes a vector x and for each value in that vector, subtracts the minimum value in x and divides by the range of x
+
+normalize &lt;- function(x){
+  return ( 
+    (x - min(x))/(max(x) - min(x)) 
+           )
+}</pre>
+
 <p>Normalize data</p>
+
+<pre class = 'prettyprint lang-r'>#banjir_data_n &lt;- as.data.frame(lapply(banjir_data[,1:13], normalize))
+
+#banjir_data_x &lt;- merge(banjir_data_n, banjir_data$PREDH1, by=&quot;&quot;)
+# n0_var &lt;- nearZeroVar(banjir_data[,1:14])
+# banjir_data &lt;- banjir_data[,-n0_var]
+
+banjir_data_intrain &lt;- sample(nrow(banjir_data), nrow(banjir_data)*0.8)
+banjir_data_train &lt;- banjir_data[banjir_data_intrain, ]
+banjir_data_test &lt;- banjir_data[-banjir_data_intrain, ]</pre>
+
+<pre class = 'prettyprint lang-r'>prop.table(table(banjir_data_train$PREDH1))</pre>
 
 <pre >## 
 ##    Normal    Banjir 
 ## 0.8207739 0.1792261</pre>
 
+<pre class = 'prettyprint lang-r'>prop.table(table(banjir_data_test$PREDH1))</pre>
+
 <pre >## 
 ##    Normal    Banjir 
 ## 0.8902439 0.1097561</pre>
+
+<pre class = 'prettyprint lang-r'>ctrl &lt;- trainControl(method=&quot;repeatedcv&quot;, number=5, repeats=3)
+banjir_data_forest &lt;- train(PREDH1 ~ ., data=banjir_data_train, method=&quot;rf&quot;, trControl = ctrl)</pre>
+
+<pre class = 'prettyprint lang-r'>banjir_data_forest</pre>
 
 <pre >## Random Forest 
 ## 
@@ -139,6 +259,8 @@
 ## Accuracy was used to select the optimal model using the largest value.
 ## The final value used for the model was mtry = 2.</pre>
 
+<pre class = 'prettyprint lang-r'>table(predict(banjir_data_forest, banjir_data_test[,-14]), banjir_data_test[,14])</pre>
+
 <pre >##         
 ##          Normal Banjir
 ##   Normal    214     24
@@ -148,23 +270,66 @@
 
 <p>Here are the data sources</p>
 
+<pre class = 'prettyprint lang-r'>banjir_data &lt;- read.csv(&quot;data/CLEAN DATASET BANJIR2.csv&quot;, stringsAsFactors = FALSE)
+
+banjir_data$PREDH1 &lt;- factor(banjir_data$PREDH1, levels = c(&quot;0&quot;, &quot;1&quot;), labels = c(&quot;Normal&quot;, &quot;Banjir&quot;))
+banjir_data$PREDH2 &lt;- factor(banjir_data$PREDH2, levels = c(&quot;0&quot;, &quot;1&quot;, &quot;2&quot;, &quot;3&quot;), labels = c(&quot;Normal&quot;, &quot;H-2&quot;, &quot;H-1&quot;, &quot;Banjir&quot;))
+
+banjir_data$MXSPD &lt;- as.numeric(banjir_data$MXSPD)
+banjir_data$PRCP &lt;- as.numeric(banjir_data$PRCP)</pre>
+
 </article></slide><slide class=""><hgroup><h2>Cleaning up data</h2></hgroup><article  id="cleaning-up-data">
 
 <p>Removing unnecessary data sets, such as Station, Year-Month-Day, Fog, Snow and Hail data</p>
+
+<pre class = 'prettyprint lang-r'>banjir_data &lt;- subset(banjir_data, select = -c(STN, YEARMODA, PREDH2, FOG, SNOW, HAIL))</pre>
+
+<pre class = 'prettyprint lang-r'>set.seed(3)
+
+banjir_data &lt;- banjir_data[sample(nrow(banjir_data)),]
+
+table(banjir_data$PREDH1)</pre>
 
 <pre >## 
 ## Normal Banjir 
 ##    222     49</pre>
 
+<pre class = 'prettyprint lang-r'># Creating a normalize() function, which takes a vector x and for each value in that vector, subtracts the minimum value in x and divides by the range of x
+
+normalize &lt;- function(x){
+  return ( 
+    (x - min(x))/(max(x) - min(x)) 
+           )
+}</pre>
+
 <p>Normalize data</p>
+
+<pre class = 'prettyprint lang-r'>#banjir_data_n &lt;- as.data.frame(lapply(banjir_data[,1:13], normalize))
+
+#banjir_data_x &lt;- merge(banjir_data_n, banjir_data$PREDH1, by=&quot;&quot;)
+# n0_var &lt;- nearZeroVar(banjir_data[,1:14])
+# banjir_data &lt;- banjir_data[,-n0_var]
+
+banjir_data_intrain &lt;- sample(nrow(banjir_data), nrow(banjir_data)*0.8)
+banjir_data_train &lt;- banjir_data[banjir_data_intrain, ]
+banjir_data_test &lt;- banjir_data[-banjir_data_intrain, ]</pre>
+
+<pre class = 'prettyprint lang-r'>prop.table(table(banjir_data_train$PREDH1))</pre>
 
 <pre >## 
 ##    Normal    Banjir 
 ## 0.8101852 0.1898148</pre>
 
+<pre class = 'prettyprint lang-r'>prop.table(table(banjir_data_test$PREDH1))</pre>
+
 <pre >## 
 ##    Normal    Banjir 
 ## 0.8545455 0.1454545</pre>
+
+<pre class = 'prettyprint lang-r'>ctrl &lt;- trainControl(method=&quot;repeatedcv&quot;, number=5, repeats=3)
+banjir_data_forest &lt;- train(PREDH1 ~ ., data=banjir_data_train, method=&quot;rf&quot;, trControl = ctrl)</pre>
+
+<pre class = 'prettyprint lang-r'>banjir_data_forest</pre>
 
 <pre >## Random Forest 
 ## 
@@ -184,6 +349,8 @@
 ## 
 ## Accuracy was used to select the optimal model using the largest value.
 ## The final value used for the model was mtry = 2.</pre>
+
+<pre class = 'prettyprint lang-r'>table(predict(banjir_data_forest, banjir_data_test[,-15]), banjir_data_test[,15])</pre>
 
 <pre >##         
 ##          Normal Banjir
