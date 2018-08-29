@@ -182,8 +182,8 @@ $(document).ready(function () {
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYmFuamlyX2RhdGEgPC0gcmVhZC5jc3YoXCJkYXRhL0NMRUFOIERBVEFTRVQgQkFOSklSLmNzdlwiLCBzdHJpbmdzQXNGYWN0b3JzID0gRkFMU0UpXG5iYW5qaXJfZGF0YSRQUkVESDEgPC0gZmFjdG9yKGJhbmppcl9kYXRhJFBSRURIMSwgbGV2ZWxzID0gYyhcIjBcIiwgXCIxXCIpLCBsYWJlbHMgPSBjKFwiTm9ybWFsXCIsIFwiQmFuamlyXCIpKVxuYmFuamlyX2RhdGEkUFJFREgyIDwtIGZhY3RvcihiYW5qaXJfZGF0YSRQUkVESDIsIGxldmVscyA9IGMoXCIwXCIsIFwiMVwiLCBcIjJcIiwgXCIzXCIpLCBsYWJlbHMgPSBjKFwiTm9ybWFsXCIsIFwiSC0yXCIsIFwiSC0xXCIsIFwiQmFuamlyXCIpKVxuYmFuamlyX2RhdGEkTVhTUEQgPC0gYXMubnVtZXJpYyhiYW5qaXJfZGF0YSRNWFNQRClcbmJhbmppcl9kYXRhJFBSQ1AgPC0gYXMubnVtZXJpYyhiYW5qaXJfZGF0YSRQUkNQKVxuYGBgIn0= -->
-<pre class="r"><code>banjir_data &lt;- read.csv(&quot;data/CLEAN DATASET BANJIR.csv&quot;, stringsAsFactors = FALSE)
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYmFuamlyX2RhdGEgPC0gcmVhZC5jc3YoXCJkYXRhL0NMRUFOIERBVEFTRVQgQkFOSklSMi5jc3ZcIiwgc3RyaW5nc0FzRmFjdG9ycyA9IEZBTFNFKVxuYmFuamlyX2RhdGEkUFJFREgxIDwtIGZhY3RvcihiYW5qaXJfZGF0YSRQUkVESDEsIGxldmVscyA9IGMoXCIwXCIsIFwiMVwiKSwgbGFiZWxzID0gYyhcIk5vcm1hbFwiLCBcIkJhbmppclwiKSlcbmJhbmppcl9kYXRhJFBSRURIMiA8LSBmYWN0b3IoYmFuamlyX2RhdGEkUFJFREgyLCBsZXZlbHMgPSBjKFwiMFwiLCBcIjFcIiwgXCIyXCIsIFwiM1wiKSwgbGFiZWxzID0gYyhcIk5vcm1hbFwiLCBcIkgtMlwiLCBcIkgtMVwiLCBcIkJhbmppclwiKSlcbmJhbmppcl9kYXRhJE1YU1BEIDwtIGFzLm51bWVyaWMoYmFuamlyX2RhdGEkTVhTUEQpXG5iYW5qaXJfZGF0YSRQUkNQIDwtIGFzLm51bWVyaWMoYmFuamlyX2RhdGEkUFJDUClcbmBgYCJ9 -->
+<pre class="r"><code>banjir_data &lt;- read.csv(&quot;data/CLEAN DATASET BANJIR2.csv&quot;, stringsAsFactors = FALSE)
 banjir_data$PREDH1 &lt;- factor(banjir_data$PREDH1, levels = c(&quot;0&quot;, &quot;1&quot;), labels = c(&quot;Normal&quot;, &quot;Banjir&quot;))
 banjir_data$PREDH2 &lt;- factor(banjir_data$PREDH2, levels = c(&quot;0&quot;, &quot;1&quot;, &quot;2&quot;, &quot;3&quot;), labels = c(&quot;Normal&quot;, &quot;H-2&quot;, &quot;H-1&quot;, &quot;Banjir&quot;))
 banjir_data$MXSPD &lt;- as.numeric(banjir_data$MXSPD)
@@ -200,10 +200,10 @@ set.seed(3)
 banjir_data &lt;- banjir_data[sample(nrow(banjir_data)),]
 table(banjir_data$PREDH1)</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiXG5Ob3JtYWwgQmFuamlyIFxuICAxMDI1ICAgIDIwMyBcbiJ9 -->
+<!-- rnb-output-begin eyJkYXRhIjoiXG5Ob3JtYWwgQmFuamlyIFxuICAgMjIyICAgICA0OSBcbiJ9 -->
 <pre><code>
 Normal Banjir 
-  1025    203 </code></pre>
+   222     49 </code></pre>
 <!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
@@ -238,18 +238,18 @@ banjir_data_test &lt;- banjir_data[-banjir_data_intrain, ]</code></pre>
 <!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucHJvcC50YWJsZSh0YWJsZShiYW5qaXJfZGF0YV90cmFpbiRQUkVESDEpKVxuYGBgIn0= -->
 <pre class="r"><code>prop.table(table(banjir_data_train$PREDH1))</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiXG4gICBOb3JtYWwgICAgQmFuamlyIFxuMC44MjA3NzM5IDAuMTc5MjI2MSBcbiJ9 -->
+<!-- rnb-output-begin eyJkYXRhIjoiXG4gICBOb3JtYWwgICAgQmFuamlyIFxuMC44MTAxODUyIDAuMTg5ODE0OCBcbiJ9 -->
 <pre><code>
    Normal    Banjir 
-0.8207739 0.1792261 </code></pre>
+0.8101852 0.1898148 </code></pre>
 <!-- rnb-output-end -->
 <!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucHJvcC50YWJsZSh0YWJsZShiYW5qaXJfZGF0YV90ZXN0JFBSRURIMSkpXG5gYGAifQ== -->
 <pre class="r"><code>prop.table(table(banjir_data_test$PREDH1))</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiXG4gICBOb3JtYWwgICAgQmFuamlyIFxuMC44OTAyNDM5IDAuMTA5NzU2MSBcbiJ9 -->
+<!-- rnb-output-begin eyJkYXRhIjoiXG4gICBOb3JtYWwgICAgQmFuamlyIFxuMC44NTQ1NDU1IDAuMTQ1NDU0NSBcbiJ9 -->
 <pre><code>
    Normal    Banjir 
-0.8902439 0.1097561 </code></pre>
+0.8545455 0.1454545 </code></pre>
 <!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
@@ -266,22 +266,22 @@ banjir_data_forest &lt;- train(PREDH1 ~ ., data=banjir_data_train, method=&quot;
 <!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYmFuamlyX2RhdGFfZm9yZXN0XG5gYGAifQ== -->
 <pre class="r"><code>banjir_data_forest</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiUmFuZG9tIEZvcmVzdCBcblxuOTgyIHNhbXBsZXNcbiAxMyBwcmVkaWN0b3JcbiAgMiBjbGFzc2VzOiAnTm9ybWFsJywgJ0JhbmppcicgXG5cbk5vIHByZS1wcm9jZXNzaW5nXG5SZXNhbXBsaW5nOiBDcm9zcy1WYWxpZGF0ZWQgKDUgZm9sZCwgcmVwZWF0ZWQgMyB0aW1lcykgXG5TdW1tYXJ5IG9mIHNhbXBsZSBzaXplczogNzg2LCA3ODUsIDc4NiwgNzg1LCA3ODYsIDc4NiwgLi4uIFxuUmVzYW1wbGluZyByZXN1bHRzIGFjcm9zcyB0dW5pbmcgcGFyYW1ldGVyczpcblxuICBtdHJ5ICBBY2N1cmFjeSAgIEthcHBhICAgICBcbiAgIDIgICAgMC44MTQzMjg5ICAwLjA2NjY1MDYxXG4gICA3ICAgIDAuODA2ODU4MCAgMC4wOTQxMTQ4N1xuICAxMyAgICAwLjgwNDgxNTQgIDAuMTA1ODExNDdcblxuQWNjdXJhY3kgd2FzIHVzZWQgdG8gc2VsZWN0IHRoZSBvcHRpbWFsIG1vZGVsIHVzaW5nIHRoZSBsYXJnZXN0IHZhbHVlLlxuVGhlIGZpbmFsIHZhbHVlIHVzZWQgZm9yIHRoZSBtb2RlbCB3YXMgbXRyeSA9IDIuXG4ifQ== -->
+<!-- rnb-output-begin eyJkYXRhIjoiUmFuZG9tIEZvcmVzdCBcblxuMjE2IHNhbXBsZXNcbiAxNCBwcmVkaWN0b3JcbiAgMiBjbGFzc2VzOiAnTm9ybWFsJywgJ0JhbmppcicgXG5cbk5vIHByZS1wcm9jZXNzaW5nXG5SZXNhbXBsaW5nOiBDcm9zcy1WYWxpZGF0ZWQgKDUgZm9sZCwgcmVwZWF0ZWQgMyB0aW1lcykgXG5TdW1tYXJ5IG9mIHNhbXBsZSBzaXplczogMTczLCAxNzMsIDE3MywgMTcyLCAxNzMsIDE3MiwgLi4uIFxuUmVzYW1wbGluZyByZXN1bHRzIGFjcm9zcyB0dW5pbmcgcGFyYW1ldGVyczpcblxuICBtdHJ5ICBBY2N1cmFjeSAgIEthcHBhICAgIFxuICAgMiAgICAwLjgyNDE3MjAgIDAuMjMyMjIwM1xuICAgOCAgICAwLjgyMDk2NTUgIDAuMzM1NjQwN1xuICAxNCAgICAwLjgyMjU1MTEgIDAuMzU4ODg3OFxuXG5BY2N1cmFjeSB3YXMgdXNlZCB0byBzZWxlY3QgdGhlIG9wdGltYWwgbW9kZWwgdXNpbmcgdGhlIGxhcmdlc3QgdmFsdWUuXG5UaGUgZmluYWwgdmFsdWUgdXNlZCBmb3IgdGhlIG1vZGVsIHdhcyBtdHJ5ID0gMi5cbiJ9 -->
 <pre><code>Random Forest 
 
-982 samples
- 13 predictor
+216 samples
+ 14 predictor
   2 classes: 'Normal', 'Banjir' 
 
 No pre-processing
 Resampling: Cross-Validated (5 fold, repeated 3 times) 
-Summary of sample sizes: 786, 785, 786, 785, 786, 786, ... 
+Summary of sample sizes: 173, 173, 173, 172, 173, 172, ... 
 Resampling results across tuning parameters:
 
-  mtry  Accuracy   Kappa     
-   2    0.8143289  0.06665061
-   7    0.8068580  0.09411487
-  13    0.8048154  0.10581147
+  mtry  Accuracy   Kappa    
+   2    0.8241720  0.2322203
+   8    0.8209655  0.3356407
+  14    0.8225511  0.3588878
 
 Accuracy was used to select the optimal model using the largest value.
 The final value used for the model was mtry = 2.</code></pre>
@@ -290,20 +290,20 @@ The final value used for the model was mtry = 2.</code></pre>
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxudGFibGUocHJlZGljdChiYW5qaXJfZGF0YV9mb3Jlc3QsIGJhbmppcl9kYXRhX3Rlc3RbLC0xNF0pLCBiYW5qaXJfZGF0YV90ZXN0WywxNF0pXG5gYGAifQ== -->
-<pre class="r"><code>table(predict(banjir_data_forest, banjir_data_test[,-14]), banjir_data_test[,14])</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxudGFibGUocHJlZGljdChiYW5qaXJfZGF0YV9mb3Jlc3QsIGJhbmppcl9kYXRhX3Rlc3RbLC0xNV0pLCBiYW5qaXJfZGF0YV90ZXN0WywxNV0pXG5gYGAifQ== -->
+<pre class="r"><code>table(predict(banjir_data_forest, banjir_data_test[,-15]), banjir_data_test[,15])</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiICAgICAgICBcbiAgICAgICAgIE5vcm1hbCBCYW5qaXJcbiAgTm9ybWFsICAgIDIxNCAgICAgMjRcbiAgQmFuamlyICAgICAgNSAgICAgIDNcbiJ9 -->
+<!-- rnb-output-begin eyJkYXRhIjoiICAgICAgICBcbiAgICAgICAgIE5vcm1hbCBCYW5qaXJcbiAgTm9ybWFsICAgICA0NyAgICAgIDVcbiAgQmFuamlyICAgICAgMCAgICAgIDNcbiJ9 -->
 <pre><code>        
          Normal Banjir
-  Normal    214     24
-  Banjir      5      3</code></pre>
+  Normal     47      5
+  Banjir      0      3</code></pre>
 <!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 
-<div id="rmd-source-code">LS0tDQp0aXRsZTogIkJhbmppciEiDQpvdXRwdXQ6IGh0bWxfbm90ZWJvb2sNCi0tLQ0KDQpgYGB7cn0NCmxpYnJhcnkoY2FyZXQpDQpgYGANCg0KDQpgYGB7cn0NCmJhbmppcl9kYXRhIDwtIHJlYWQuY3N2KCJkYXRhL0NMRUFOIERBVEFTRVQgQkFOSklSLmNzdiIsIHN0cmluZ3NBc0ZhY3RvcnMgPSBGQUxTRSkNCg0KYmFuamlyX2RhdGEkUFJFREgxIDwtIGZhY3RvcihiYW5qaXJfZGF0YSRQUkVESDEsIGxldmVscyA9IGMoIjAiLCAiMSIpLCBsYWJlbHMgPSBjKCJOb3JtYWwiLCAiQmFuamlyIikpDQpiYW5qaXJfZGF0YSRQUkVESDIgPC0gZmFjdG9yKGJhbmppcl9kYXRhJFBSRURIMiwgbGV2ZWxzID0gYygiMCIsICIxIiwgIjIiLCAiMyIpLCBsYWJlbHMgPSBjKCJOb3JtYWwiLCAiSC0yIiwgIkgtMSIsICJCYW5qaXIiKSkNCg0KYmFuamlyX2RhdGEkTVhTUEQgPC0gYXMubnVtZXJpYyhiYW5qaXJfZGF0YSRNWFNQRCkNCmJhbmppcl9kYXRhJFBSQ1AgPC0gYXMubnVtZXJpYyhiYW5qaXJfZGF0YSRQUkNQKQ0KYGBgDQoNCk5vdywgbGV0J3MgdXNlIFBSRURIMSwgcmVtb3ZlIFBSRURIMg0KYGBge3J9DQpiYW5qaXJfZGF0YSA8LSBzdWJzZXQoYmFuamlyX2RhdGEsIHNlbGVjdCA9IC1jKFNUTiwgWUVBUk1PREEsIFBSRURIMiwgRk9HLCBTTk9XLCBIQUlMKSkNCg0Kc2V0LnNlZWQoMykNCg0KYmFuamlyX2RhdGEgPC0gYmFuamlyX2RhdGFbc2FtcGxlKG5yb3coYmFuamlyX2RhdGEpKSxdDQoNCnRhYmxlKGJhbmppcl9kYXRhJFBSRURIMSkNCg0KYGBgDQoNCg0KDQpgYGB7cn0NCiMgQ3JlYXRpbmcgYSBub3JtYWxpemUoKSBmdW5jdGlvbiwgd2hpY2ggdGFrZXMgYSB2ZWN0b3IgeCBhbmQgZm9yIGVhY2ggdmFsdWUgaW4gdGhhdCB2ZWN0b3IsIHN1YnRyYWN0cyB0aGUgbWluaW11bSB2YWx1ZSBpbiB4IGFuZCBkaXZpZGVzIGJ5IHRoZSByYW5nZSBvZiB4DQoNCm5vcm1hbGl6ZSA8LSBmdW5jdGlvbih4KXsNCiAgcmV0dXJuICggDQogICAgKHggLSBtaW4oeCkpLyhtYXgoeCkgLSBtaW4oeCkpIA0KICAgICAgICAgICApDQp9DQpgYGANCg0KDQpOb3JtYWxpemUgZGF0YQ0KYGBge3J9DQojYmFuamlyX2RhdGFfbiA8LSBhcy5kYXRhLmZyYW1lKGxhcHBseShiYW5qaXJfZGF0YVssMToxM10sIG5vcm1hbGl6ZSkpDQoNCiNiYW5qaXJfZGF0YV94IDwtIG1lcmdlKGJhbmppcl9kYXRhX24sIGJhbmppcl9kYXRhJFBSRURIMSwgYnk9IiIpDQojIG4wX3ZhciA8LSBuZWFyWmVyb1ZhcihiYW5qaXJfZGF0YVssMToxNF0pDQojIGJhbmppcl9kYXRhIDwtIGJhbmppcl9kYXRhWywtbjBfdmFyXQ0KDQpiYW5qaXJfZGF0YV9pbnRyYWluIDwtIHNhbXBsZShucm93KGJhbmppcl9kYXRhKSwgbnJvdyhiYW5qaXJfZGF0YSkqMC44KQ0KYmFuamlyX2RhdGFfdHJhaW4gPC0gYmFuamlyX2RhdGFbYmFuamlyX2RhdGFfaW50cmFpbiwgXQ0KYmFuamlyX2RhdGFfdGVzdCA8LSBiYW5qaXJfZGF0YVstYmFuamlyX2RhdGFfaW50cmFpbiwgXQ0KDQpgYGANCg0KDQpgYGB7cn0NCnByb3AudGFibGUodGFibGUoYmFuamlyX2RhdGFfdHJhaW4kUFJFREgxKSkNCg0KcHJvcC50YWJsZSh0YWJsZShiYW5qaXJfZGF0YV90ZXN0JFBSRURIMSkpDQpgYGANCg0KDQpgYGB7cn0NCmN0cmwgPC0gdHJhaW5Db250cm9sKG1ldGhvZD0icmVwZWF0ZWRjdiIsIG51bWJlcj01LCByZXBlYXRzPTMpDQpiYW5qaXJfZGF0YV9mb3Jlc3QgPC0gdHJhaW4oUFJFREgxIH4gLiwgZGF0YT1iYW5qaXJfZGF0YV90cmFpbiwgbWV0aG9kPSJyZiIsIHRyQ29udHJvbCA9IGN0cmwpDQpgYGANCg0KDQoNCmBgYHtyfQ0KYmFuamlyX2RhdGFfZm9yZXN0DQpgYGANCg0KYGBge3J9DQp0YWJsZShwcmVkaWN0KGJhbmppcl9kYXRhX2ZvcmVzdCwgYmFuamlyX2RhdGFfdGVzdFssLTE0XSksIGJhbmppcl9kYXRhX3Rlc3RbLDE0XSkNCmBgYA0KDQoNCg==</div>
+<div id="rmd-source-code">LS0tDQp0aXRsZTogIkJhbmppciEiDQpvdXRwdXQ6DQogIHBkZl9kb2N1bWVudDogZGVmYXVsdA0KICBodG1sX25vdGVib29rOiBkZWZhdWx0DQotLS0NCg0KYGBge3J9DQpsaWJyYXJ5KGNhcmV0KQ0KYGBgDQoNCg0KYGBge3J9DQpiYW5qaXJfZGF0YSA8LSByZWFkLmNzdigiZGF0YS9DTEVBTiBEQVRBU0VUIEJBTkpJUjIuY3N2Iiwgc3RyaW5nc0FzRmFjdG9ycyA9IEZBTFNFKQ0KDQpiYW5qaXJfZGF0YSRQUkVESDEgPC0gZmFjdG9yKGJhbmppcl9kYXRhJFBSRURIMSwgbGV2ZWxzID0gYygiMCIsICIxIiksIGxhYmVscyA9IGMoIk5vcm1hbCIsICJCYW5qaXIiKSkNCmJhbmppcl9kYXRhJFBSRURIMiA8LSBmYWN0b3IoYmFuamlyX2RhdGEkUFJFREgyLCBsZXZlbHMgPSBjKCIwIiwgIjEiLCAiMiIsICIzIiksIGxhYmVscyA9IGMoIk5vcm1hbCIsICJILTIiLCAiSC0xIiwgIkJhbmppciIpKQ0KDQpiYW5qaXJfZGF0YSRNWFNQRCA8LSBhcy5udW1lcmljKGJhbmppcl9kYXRhJE1YU1BEKQ0KYmFuamlyX2RhdGEkUFJDUCA8LSBhcy5udW1lcmljKGJhbmppcl9kYXRhJFBSQ1ApDQpgYGANCg0KTm93LCBsZXQncyB1c2UgUFJFREgxLCByZW1vdmUgUFJFREgyDQpgYGB7cn0NCmJhbmppcl9kYXRhIDwtIHN1YnNldChiYW5qaXJfZGF0YSwgc2VsZWN0ID0gLWMoU1ROLCBZRUFSTU9EQSwgUFJFREgyLCBGT0csIFNOT1csIEhBSUwpKQ0KDQpzZXQuc2VlZCgzKQ0KDQpiYW5qaXJfZGF0YSA8LSBiYW5qaXJfZGF0YVtzYW1wbGUobnJvdyhiYW5qaXJfZGF0YSkpLF0NCg0KdGFibGUoYmFuamlyX2RhdGEkUFJFREgxKQ0KDQpgYGANCg0KDQoNCmBgYHtyfQ0KIyBDcmVhdGluZyBhIG5vcm1hbGl6ZSgpIGZ1bmN0aW9uLCB3aGljaCB0YWtlcyBhIHZlY3RvciB4IGFuZCBmb3IgZWFjaCB2YWx1ZSBpbiB0aGF0IHZlY3Rvciwgc3VidHJhY3RzIHRoZSBtaW5pbXVtIHZhbHVlIGluIHggYW5kIGRpdmlkZXMgYnkgdGhlIHJhbmdlIG9mIHgNCg0Kbm9ybWFsaXplIDwtIGZ1bmN0aW9uKHgpew0KICByZXR1cm4gKCANCiAgICAoeCAtIG1pbih4KSkvKG1heCh4KSAtIG1pbih4KSkgDQogICAgICAgICAgICkNCn0NCmBgYA0KDQoNCk5vcm1hbGl6ZSBkYXRhDQpgYGB7cn0NCiNiYW5qaXJfZGF0YV9uIDwtIGFzLmRhdGEuZnJhbWUobGFwcGx5KGJhbmppcl9kYXRhWywxOjEzXSwgbm9ybWFsaXplKSkNCg0KI2Jhbmppcl9kYXRhX3ggPC0gbWVyZ2UoYmFuamlyX2RhdGFfbiwgYmFuamlyX2RhdGEkUFJFREgxLCBieT0iIikNCiMgbjBfdmFyIDwtIG5lYXJaZXJvVmFyKGJhbmppcl9kYXRhWywxOjE0XSkNCiMgYmFuamlyX2RhdGEgPC0gYmFuamlyX2RhdGFbLC1uMF92YXJdDQoNCmJhbmppcl9kYXRhX2ludHJhaW4gPC0gc2FtcGxlKG5yb3coYmFuamlyX2RhdGEpLCBucm93KGJhbmppcl9kYXRhKSowLjgpDQpiYW5qaXJfZGF0YV90cmFpbiA8LSBiYW5qaXJfZGF0YVtiYW5qaXJfZGF0YV9pbnRyYWluLCBdDQpiYW5qaXJfZGF0YV90ZXN0IDwtIGJhbmppcl9kYXRhWy1iYW5qaXJfZGF0YV9pbnRyYWluLCBdDQoNCmBgYA0KDQoNCmBgYHtyfQ0KcHJvcC50YWJsZSh0YWJsZShiYW5qaXJfZGF0YV90cmFpbiRQUkVESDEpKQ0KDQpwcm9wLnRhYmxlKHRhYmxlKGJhbmppcl9kYXRhX3Rlc3QkUFJFREgxKSkNCmBgYA0KDQoNCmBgYHtyfQ0KY3RybCA8LSB0cmFpbkNvbnRyb2wobWV0aG9kPSJyZXBlYXRlZGN2IiwgbnVtYmVyPTUsIHJlcGVhdHM9MykNCmJhbmppcl9kYXRhX2ZvcmVzdCA8LSB0cmFpbihQUkVESDEgfiAuLCBkYXRhPWJhbmppcl9kYXRhX3RyYWluLCBtZXRob2Q9InJmIiwgdHJDb250cm9sID0gY3RybCkNCmBgYA0KDQoNCg0KYGBge3J9DQpiYW5qaXJfZGF0YV9mb3Jlc3QNCmBgYA0KDQpgYGB7cn0NCnRhYmxlKHByZWRpY3QoYmFuamlyX2RhdGFfZm9yZXN0LCBiYW5qaXJfZGF0YV90ZXN0WywtMTVdKSwgYmFuamlyX2RhdGFfdGVzdFssMTVdKQ0KYGBgDQoNCg0K</div>
 
 
 

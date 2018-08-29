@@ -1,15 +1,24 @@
 ---
-title: "Banjir!"
-output: html_notebook
+title: "Flood Detection Analysis"
+author: "The Indo Guys (and Gal)"
+date: "August 31, 2018"
+output: ioslides_presentation
 ---
 
-```{r}
-library(caret)
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
 ```
 
+## Problem
+
+Lorem ipsum
+
+## Data
+
+Here are the data sources
 
 ```{r}
-banjir_data <- read.csv("data/CLEAN DATASET BANJIR.csv", stringsAsFactors = FALSE)
+banjir_data <- read.csv("data/CLEAN DATASET BANJIR2.csv", stringsAsFactors = FALSE)
 
 banjir_data$PREDH1 <- factor(banjir_data$PREDH1, levels = c("0", "1"), labels = c("Normal", "Banjir"))
 banjir_data$PREDH2 <- factor(banjir_data$PREDH2, levels = c("0", "1", "2", "3"), labels = c("Normal", "H-2", "H-1", "Banjir"))
@@ -18,10 +27,16 @@ banjir_data$MXSPD <- as.numeric(banjir_data$MXSPD)
 banjir_data$PRCP <- as.numeric(banjir_data$PRCP)
 ```
 
-Now, let's use PREDH1, remove PREDH2
+## Cleaning up data
+
+Removing unnecessary data sets, such as Station, Year-Month-Day, Fog, Snow and Hail data
 ```{r}
 banjir_data <- subset(banjir_data, select = -c(STN, YEARMODA, PREDH2, FOG, SNOW, HAIL))
+```
 
+
+
+```{r}
 set.seed(3)
 
 banjir_data <- banjir_data[sample(nrow(banjir_data)),]
@@ -77,7 +92,7 @@ banjir_data_forest
 ```
 
 ```{r}
-table(predict(banjir_data_forest, banjir_data_test[,-14]), banjir_data_test[,14])
+table(predict(banjir_data_forest, banjir_data_test[,-15]), banjir_data_test[,15])
 ```
 
 
