@@ -85,7 +85,7 @@ FRSHTT | Indicators for the occurrence during the day of: Fog ('F' - 1st digit).
 
 ```{r, echo=FALSE}
 banjir_data$FACT1 <- factor(banjir_data$FACT1, levels = c("0", "1"), labels = c("Normal", "Banjir"))
-banjir_data$FACT2 <- factor(banjir_data$FACT2, levels = c("0", "1", "2", "3"), labels = c("Normal", "H-2", "H-1", "Banjir"))
+banjir_data$FACT2 <- factor(banjir_data$FACT2, levels = c("0", "1"), labels = c("Normal", "H-1"))
 
 banjir_data$MXSPD <- as.numeric(banjir_data$MXSPD)
 banjir_data$PRCP <- as.numeric(banjir_data$PRCP)
@@ -244,10 +244,17 @@ We found data of water level in the Katulampa water gate
 ```{r}
 banjir_data <- read.csv("data/CLEAN DATASET BANJIR2.csv", stringsAsFactors = FALSE)
 ```
+```{r}
+summary(banjir_data)
+```
+
+```{r}
+summary(banjir_data)
+```
 
 ```{r, echo=FALSE}
 banjir_data$FACT1 <- factor(banjir_data$FACT1, levels = c("0", "1"), labels = c("Normal", "Banjir"))
-banjir_data$FACT2 <- factor(banjir_data$FACT2, levels = c("0", "1", "2", "3"), labels = c("Normal", "H-2", "H-1", "Banjir"))
+banjir_data$FACT2 <- factor(banjir_data$FACT2, levels = c("0", "1"), labels = c("Normal", "H-1"))
 
 banjir_data$MXSPD <- as.numeric(banjir_data$MXSPD)
 banjir_data$PRCP <- as.numeric(banjir_data$PRCP)
@@ -408,7 +415,7 @@ banjir_data <- read.csv("data/CLEAN DATASET BANJIR2.csv", stringsAsFactors = FAL
 
 ```{r, echo=FALSE}
 banjir_data$FACT1 <- factor(banjir_data$FACT1, levels = c("0", "1"), labels = c("Normal", "Banjir"))
-banjir_data$FACT2 <- factor(banjir_data$FACT2, levels = c("0", "1", "2", "3"), labels = c("Normal", "H-2", "H-1", "Banjir"))
+banjir_data$FACT2 <- factor(banjir_data$FACT2, levels = c("0", "1"), labels = c("Normal", "H-1"))
 
 banjir_data$MXSPD <- as.numeric(banjir_data$MXSPD)
 banjir_data$PRCP <- as.numeric(banjir_data$PRCP)
@@ -552,7 +559,7 @@ banjir_rf
 
 Accuracy is:
 ```{r}
-(banjir_rf["Normal", "Normal"] + banjir_rf["Banjir", "Banjir"]) / sum(banjir_rf)
+(banjir_rf["Normal", "Normal"] + banjir_rf["H-1", "H-1"]) / sum(banjir_rf)
 ```
 
 ## Conclusion
