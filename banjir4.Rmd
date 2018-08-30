@@ -228,6 +228,8 @@ Accuracy is:
 
 We found data of water level in the Katulampa water gate
 
+![alt text](data/katulampa.jpg "Katulampa")
+
 ```{r}
 banjir_data <- read.csv("data/CLEAN DATASET BANJIR2.csv", stringsAsFactors = FALSE)
 ```
