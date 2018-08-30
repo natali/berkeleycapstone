@@ -18,31 +18,31 @@ set.seed(2)
 
 
 Jakarta flood has become somekind of a tradition, where flood can happen yearly and can go for over 2 weeks on every occurence
+
 Research found that there are a few reasons for the flood: 
+
 - high precipitation
 - humidity level
 - tide level
 - land subsidence
+- percipitation from neighboring area
 
 ## Problem Statement {.flexbox .vcenter}
 
-Can we predict if flooding is going to happen given the weather data H-1 and H-2 prior of the event itself?
+Can we predict if flooding is going to happen given the weather data and Katulampa flood gate
 
 ## Expected Result {.flexbox .vcenter}
 
-To confirm if there is statistical significance that we are able predict the flood before it happens, based on the weather data
+To confirm if there is statistical significance that we are able predict the flood before it happens, based on the weather data and percipitation from nearby surrounding area
 
 ## Data Sources
 
-https://data.go.id/dataset/curah-hujan-dan-hari-hujan-menurut-bulan-dki-jakarta
-https://bpbd.jakarta.go.id/waterlevel/
-http://data.jakarta.go.id/group/lingkungan-hidup
-
-## Basic data from NOAA {.flexbox .vcenter}
+* https://data.go.id/dataset/curah-hujan-dan-hari-hujan-menurut-bulan-dki-jakarta
+* https://bpbd.jakarta.go.id/waterlevel/
+* http://data.jakarta.go.id/group/lingkungan-hidup
 
 
 ## Data source from NOAA
-
 
 Data source sample
 ```{r}
@@ -54,24 +54,27 @@ head(banjir_data)
 Breakdown of the data structure
 
 CODE | Description
------|-----:
+-----|-----
 STN | Station number for the location.
 YEARMODA | The year, month and day.
 TEMP | Mean temperature for the day in degrees Fahrenheit to tenths.
 DEWP | Mean dew point for the day in degrees Fahrenheit to tenths.
 SLP | Mean sea level pressure for the day in millibars to tenths.
 
+## Data source explanation
 
 CODE | Description
------|-----:
+-----|-----
 STP | Mean station pressure for the day in millibars to tenths.
 VISIB | Mean visibility for the day in miles to tenths.     
 WDSP | Mean wind speed for the day in knots to tenths.
 MXSPD | Maximum sustained wind speed reported for the day in knots to tenths.
 GUST | Maximum wind gust reported for the day in knots to tenths.
 
+## Data source explanation
+
 CODE | Description
------|-----:
+-----|-----
 MAX | Maximum temperature reported during the day in Fahrenheit to tenths--time of max temp report varies by country and region, so this will sometimes not be the max for the calendar day.
 MIN | Minimum temperature reported during the day in Fahrenheit to tenths--time of min  temp report varies by country and region, so this will sometimes not be the min for the calendar day. 
 PRCP | Total precipitation (rain and/or melted snow) reported during the day in inches and hundredths.
@@ -81,8 +84,8 @@ FRSHTT | Indicators for the occurrence during the day of: Fog ('F' - 1st digit).
 
 
 ```{r, echo=FALSE}
-banjir_data$PREDH1 <- factor(banjir_data$PREDH1, levels = c("0", "1"), labels = c("Normal", "Banjir"))
-banjir_data$PREDH2 <- factor(banjir_data$PREDH2, levels = c("0", "1", "2", "3"), labels = c("Normal", "H-2", "H-1", "Banjir"))
+banjir_data$FACT1 <- factor(banjir_data$FACT1, levels = c("0", "1"), labels = c("Normal", "Banjir"))
+banjir_data$FACT2 <- factor(banjir_data$FACT2, levels = c("0", "1", "2", "3"), labels = c("Normal", "H-2", "H-1", "Banjir"))
 
 banjir_data$MXSPD <- as.numeric(banjir_data$MXSPD)
 banjir_data$PRCP <- as.numeric(banjir_data$PRCP)
@@ -90,22 +93,29 @@ banjir_data$PRCP <- as.numeric(banjir_data$PRCP)
 
 ## ETL the data
 ```{r}
-summary(banjir_data)
+summary(banjir_data[,1:10])
 ```
+
+## ETL the data
+```{r}
+summary(banjir_data[,11:20])
+```
+
+## Facts about the data
 
 Our source of data consist of banjir (Flood) and Normal (no flooding)
 ```{r}
-table(banjir_data$PREDH1)
+table(banjir_data$FACT1)
 ```
 
 ## Data preparation
 
-We remove unnecessary data
+We remove unnecessary data (Station, date, another set of prediction, fog, snow and hail)
 ```{r}
-banjir_data <- subset(banjir_data, select = -c(STN, YEARMODA, PREDH2, FOG, SNOW, HAIL))
+banjir_data <- subset(banjir_data, select = -c(STN, YEARMODA, FACT2, FOG, SNOW, HAIL))
 ```
 
-Also, we randomize from time series to avoid uneven spread data
+Also, we randomize from time series to avoid uneven spread data (sample() function)
 ```{r}
 
 banjir_data <- banjir_data[sample(nrow(banjir_data)),]
@@ -127,25 +137,19 @@ normalize <- function(x){
 
 We split the data into training data (80%) and test data (20%)
 ```{r}
-#banjir_data_n <- as.data.frame(lapply(banjir_data[,1:13], normalize))
-
-#banjir_data_x <- merge(banjir_data_n, banjir_data$PREDH1, by="")
-# n0_var <- nearZeroVar(banjir_data[,1:14])
-# banjir_data <- banjir_data[,-n0_var]
-
 banjir_data_intrain <- sample(nrow(banjir_data), nrow(banjir_data)*0.8)
 banjir_data_train <- banjir_data[banjir_data_intrain, ]
 banjir_data_test <- banjir_data[-banjir_data_intrain, ]
 
 ```
-## The data ratio between the train data and test data
 
-```{r}
-prop.table(table(banjir_data_train$PREDH1))
 
-prop.table(table(banjir_data_test$PREDH1))
+
+```{r, echo=FALSE}
+prop.table(table(banjir_data_train$FACT1))
+
+prop.table(table(banjir_data_test$FACT1))
 ```
-Using set.seed(1), we see even spread of Normal and Banjir for both of data
 
 ## Random forest function
 
@@ -168,7 +172,7 @@ if (!file.exists(rdsdata1)) {
   
   for (ntree in c(25, 50, 100, 200, 500, 1000)) {
     control <- trainControl(method=method, number=10, repeats=repeats)
-  	banjir_forest_ntree <- train(PREDH1~., data=banjir_data_train, method="rf", metric=metric, tuneGrid=tunegrid, trControl=control, ntree=ntree)
+  	banjir_forest_ntree <- train(FACT1~., data=banjir_data_train, method="rf", metric=metric, tuneGrid=tunegrid, trControl=control, ntree=ntree)
   	key <- toString(ntree)
   	modellist1[[key]] <- banjir_forest_ntree
   }
@@ -180,8 +184,11 @@ if (!file.exists(rdsdata1)) {
 
 
 #ctrl <- trainControl(method="repeatedcv", number=5, repeats=3)
-#banjir_data_forest <- train(PREDH1 ~ ., data=banjir_data_train, method="rf", trControl = ctrl)
+#banjir_data_forest <- train(FACT1 ~ ., data=banjir_data_train, method="rf", trControl = ctrl)
 ```
+
+
+## Result of the Random Forest Tests
 
 ```{r}
 results <- resamples(modellist1)
@@ -189,14 +196,18 @@ results <- resamples(modellist1)
 summary(results)
 ```
 
+## Plotting the result
 
+
+Bigger Kappa is better
 ```{r}
 dotplot(results)
 
 ```
 
+From the graph, we use 200 trees as it give us better Kappa
 ```{r}
-banjir_data_forest <- modellist1$`1000`
+banjir_data_forest <- modellist1$`200`
 ```
 
 
@@ -214,7 +225,7 @@ banjir_data_forest
 We try to see the result of the prediction
 ```{r}
 banjir_rf <- table(predict(banjir_data_forest, banjir_data_test[,-14]), banjir_data_test[,14])
-
+summary(banjir_data_test[14])
 banjir_rf
 ```
 
@@ -224,7 +235,7 @@ Accuracy is:
 (banjir_rf["Normal", "Normal"] + banjir_rf["Banjir", "Banjir"]) / sum(banjir_rf)
 ```
 
-## What if we add Water Gate
+## What if we add Flood Gate Data
 
 We found data of water level in the Katulampa water gate
 
@@ -235,8 +246,8 @@ banjir_data <- read.csv("data/CLEAN DATASET BANJIR2.csv", stringsAsFactors = FAL
 ```
 
 ```{r, echo=FALSE}
-banjir_data$PREDH1 <- factor(banjir_data$PREDH1, levels = c("0", "1"), labels = c("Normal", "Banjir"))
-banjir_data$PREDH2 <- factor(banjir_data$PREDH2, levels = c("0", "1", "2", "3"), labels = c("Normal", "H-2", "H-1", "Banjir"))
+banjir_data$FACT1 <- factor(banjir_data$FACT1, levels = c("0", "1"), labels = c("Normal", "Banjir"))
+banjir_data$FACT2 <- factor(banjir_data$FACT2, levels = c("0", "1", "2", "3"), labels = c("Normal", "H-2", "H-1", "Banjir"))
 
 banjir_data$MXSPD <- as.numeric(banjir_data$MXSPD)
 banjir_data$PRCP <- as.numeric(banjir_data$PRCP)
@@ -244,23 +255,23 @@ banjir_data$PRCP <- as.numeric(banjir_data$PRCP)
 
 ## ETL the data
 ```{r}
-summary(banjir_data)
+summary(banjir_data[ ,19:20])
 ```
 
-Our source of data consist of banjir (Flood) and Normal (no flooding)
+## Total source data comparison
+
+Our source of data consist of banjir (Flood) and Normal (no flooding). We have fewer data because the water level is only available for January 2013-February 2014
 ```{r}
-table(banjir_data$PREDH1)
+table(banjir_data$FACT1)
 ```
 
-## Data preparation
 
-We remove unnecessary data
-```{r}
-banjir_data <- subset(banjir_data, select = -c(STN, YEARMODA, PREDH2, FOG, SNOW, HAIL))
+```{r, echo=FALSE}
+banjir_data <- subset(banjir_data, select = -c(STN, YEARMODA, FACT2, FOG, SNOW, HAIL))
 ```
 
-Also, we randomize from time series to avoid uneven spread data
-```{r}
+
+```{r,  echo=FALSE}
 
 banjir_data <- banjir_data[sample(nrow(banjir_data)),]
 
@@ -279,11 +290,11 @@ normalize <- function(x){
 ```
 
 
-We split the data into training data (80%) and test data (20%)
-```{r}
+
+```{r,  echo=FALSE}
 #banjir_data_n <- as.data.frame(lapply(banjir_data[,1:13], normalize))
 
-#banjir_data_x <- merge(banjir_data_n, banjir_data$PREDH1, by="")
+#banjir_data_x <- merge(banjir_data_n, banjir_data$FACT1, by="")
 # n0_var <- nearZeroVar(banjir_data[,1:14])
 # banjir_data <- banjir_data[,-n0_var]
 
@@ -292,18 +303,16 @@ banjir_data_train <- banjir_data[banjir_data_intrain, ]
 banjir_data_test <- banjir_data[-banjir_data_intrain, ]
 
 ```
-## The data ratio between the train data and test data
 
-```{r}
-prop.table(table(banjir_data_train$PREDH1))
+```{r, echo=FALSE}
+prop.table(table(banjir_data_train$FACT1))
 
-prop.table(table(banjir_data_test$PREDH1))
+prop.table(table(banjir_data_test$FACT1))
 ```
-Using set.seed(1), we see even spread of Normal and Banjir for both of data
 
 ## Random forest function
 
-Here we use RepeatedCV
+We run the same random forest, with 4 variation of mtry and 6 variation of ntree
 ```{r}
 
 rdsdata2 <- "data/randomforest2.rds"
@@ -322,7 +331,7 @@ if (!file.exists(rdsdata2)) {
   
   for (ntree in c(25, 50, 100, 200, 500, 1000)) {
     control <- trainControl(method=method, number=10, repeats=repeats)
-  	banjir_forest_ntree <- train(PREDH1~., data=banjir_data_train, method="rf", metric=metric, tuneGrid=tunegrid, trControl=control, ntree=ntree)
+  	banjir_forest_ntree <- train(FACT1~., data=banjir_data_train, method="rf", metric=metric, tuneGrid=tunegrid, trControl=control, ntree=ntree)
   	key <- toString(ntree)
   	modellist2[[key]] <- banjir_forest_ntree
   }
@@ -334,8 +343,10 @@ if (!file.exists(rdsdata2)) {
 
 
 #ctrl <- trainControl(method="repeatedcv", number=5, repeats=3)
-#banjir_data_forest <- train(PREDH1 ~ ., data=banjir_data_train, method="rf", trControl = ctrl)
+#banjir_data_forest <- train(FACT1 ~ ., data=banjir_data_train, method="rf", trControl = ctrl)
 ```
+
+## Result of Random Forest
 
 ```{r}
 results <- resamples(modellist2)
@@ -343,20 +354,22 @@ results <- resamples(modellist2)
 summary(results)
 ```
 
-
-```{r}
-dotplot(results)
-
-```
+## Plot data of the test
 
 We decided to choose 200 tree instead of 100 tree because the Kappa performance is really well
 
 Kappa: https://stats.stackexchange.com/a/82187
 ```{r}
+dotplot(results)
+
+```
+
+
+```{r}
 banjir_data_forest <- modellist2$`200`
 ```
 
-## Random forest
+## Random forest test result
 
 Result of the random forest function
 ```{r}
@@ -369,7 +382,6 @@ banjir_data_forest
 We try to see the result of the prediction
 ```{r}
 banjir_rf <- table(predict(banjir_data_forest, banjir_data_test[,-15]), banjir_data_test[,15])
-table(banjir_data_test$PREDH1)
 banjir_rf
 ```
 
@@ -379,8 +391,170 @@ Accuracy is:
 (banjir_rf["Normal", "Normal"] + banjir_rf["Banjir", "Banjir"]) / sum(banjir_rf)
 ```
 
+## Conclusion
+
+From this data, the effect of adding Katulampa flood gate data is essential for the accuracy of the prediction
+
 ```{r}
 
 ```
 
+## How about predicting 1 Day before and 2 days before?
 
+
+```{r}
+banjir_data <- read.csv("data/CLEAN DATASET BANJIR2.csv", stringsAsFactors = FALSE)
+```
+
+```{r, echo=FALSE}
+banjir_data$FACT1 <- factor(banjir_data$FACT1, levels = c("0", "1"), labels = c("Normal", "Banjir"))
+banjir_data$FACT2 <- factor(banjir_data$FACT2, levels = c("0", "1", "2", "3"), labels = c("Normal", "H-2", "H-1", "Banjir"))
+
+banjir_data$MXSPD <- as.numeric(banjir_data$MXSPD)
+banjir_data$PRCP <- as.numeric(banjir_data$PRCP)
+```
+
+## ETL the data
+```{r}
+summary(banjir_data[ ,19:21])
+```
+
+## Total source data comparison
+
+Our source of data consist of banjir (Flood) and Normal (no flooding). We have fewer data because the water level is only available for January 2013-February 2014
+```{r}
+table(banjir_data$FACT2)
+```
+
+
+```{r, echo=FALSE}
+banjir_data <- subset(banjir_data, select = -c(STN, YEARMODA, FACT1, FOG, SNOW, HAIL))
+```
+
+
+```{r,  echo=FALSE}
+
+banjir_data <- banjir_data[sample(nrow(banjir_data)),]
+
+```
+
+
+
+```{r, echo=FALSE}
+# Creating a normalize() function, which takes a vector x and for each value in that vector, subtracts the minimum value in x and divides by the range of x
+
+normalize <- function(x){
+  return ( 
+    (x - min(x))/(max(x) - min(x)) 
+           )
+}
+```
+
+
+
+```{r,  echo=FALSE}
+#banjir_data_n <- as.data.frame(lapply(banjir_data[,1:13], normalize))
+
+#banjir_data_x <- merge(banjir_data_n, banjir_data$FACT1, by="")
+# n0_var <- nearZeroVar(banjir_data[,1:14])
+# banjir_data <- banjir_data[,-n0_var]
+
+banjir_data_intrain <- sample(nrow(banjir_data), nrow(banjir_data)*0.8)
+banjir_data_train <- banjir_data[banjir_data_intrain, ]
+banjir_data_test <- banjir_data[-banjir_data_intrain, ]
+
+```
+
+```{r, echo=FALSE}
+prop.table(table(banjir_data_train$FACT2))
+
+prop.table(table(banjir_data_test$FACT2))
+```
+
+## Random forest function
+
+We run the same random forest, with 4 variation of mtry and 6 variation of ntree
+```{r}
+
+rdsdata3 <- "data/randomforest3.rds"
+
+# conditional. Remove rdsdata file to run this logic
+if (!file.exists(rdsdata3)) {
+   
+  # Manual Search
+  mtry_base <- sqrt(ncol(banjir_data_train))
+  seed <- 9
+  metric <- "Accuracy"
+  tunegrid <- expand.grid(.mtry=c(mtry_base ^ 0, mtry_base ^ 1, mtry_base * 2, mtry_base ^ 2))
+  modellist3 <- list()
+  repeats <- 10
+  method <- "repeatedcv"
+  
+  for (ntree in c(25, 50, 100, 200, 500, 1000)) {
+    control <- trainControl(method=method, number=10, repeats=repeats)
+  	banjir_forest_ntree <- train(FACT2~., data=banjir_data_train, method="rf", metric=metric, tuneGrid=tunegrid, trControl=control, ntree=ntree)
+  	key <- toString(ntree)
+  	modellist3[[key]] <- banjir_forest_ntree
+  }
+  saveRDS(modellist3, file = rdsdata3)
+
+} else {
+  modellist3 <-readRDS(rdsdata3)
+}
+
+
+#ctrl <- trainControl(method="repeatedcv", number=5, repeats=3)
+#banjir_data_forest <- train(FACT1 ~ ., data=banjir_data_train, method="rf", trControl = ctrl)
+```
+
+## Result of Random Forest
+
+```{r}
+results <- resamples(modellist3)
+
+summary(results)
+```
+
+## Plot data of the test
+
+We decided to choose 200 tree instead of 100 tree because the Kappa performance is really well
+
+Kappa: https://stats.stackexchange.com/a/82187
+```{r}
+dotplot(results)
+
+```
+
+
+```{r}
+banjir_data_forest <- modellist3$`1000`
+```
+
+## Random forest test result
+
+Result of the random forest function
+```{r}
+banjir_data_forest
+```
+
+
+## Prediction based on the formula
+
+We try to see the result of the prediction
+
+
+```{r}
+summary(banjir_data_test[14:15])
+banjir_rf <- table(predict(banjir_data_forest, banjir_data_test[,-15]), banjir_data_test[,15])
+banjir_rf
+```
+
+
+Accuracy is:
+```{r}
+(banjir_rf["Normal", "Normal"] + banjir_rf["Banjir", "Banjir"]) / sum(banjir_rf)
+```
+
+## Conclusion
+
+From this data, the effect of adding Katulampa flood gate data is essential for the accuracy of the prediction
