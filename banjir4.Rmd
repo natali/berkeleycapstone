@@ -17,7 +17,7 @@ set.seed(2)
 ## Background
 
 
-Jakarta flood has become somekind of a tradition, where flood can happen yearly and can go for over 2 weeks on every occurence
+Jakarta "banjir" a.k.a flood has become somekind of a tradition, where flood can happen yearly and can go for over 2 weeks on every occurence
 
 Research found that there are a few reasons for the flood: 
 
@@ -25,15 +25,18 @@ Research found that there are a few reasons for the flood:
 - humidity level
 - tide level
 - land subsidence
-- percipitation from neighboring area
+- percipitation from neighboring area, based on the water level at Katulampa floodgate
 
 ## Problem Statement {.flexbox .vcenter}
 
-Can we predict if flooding is going to happen given the weather data and Katulampa flood gate
+Can we predict if flooding is going to happen given below conditions:
+1. the weather data
+2. Katulampa flood gate water level
+3. Flood prediction based on H-1 of historical flood data
 
 ## Expected Result {.flexbox .vcenter}
 
-To confirm if there is statistical significance that we are able predict the flood before it happens, based on the weather data and percipitation from nearby surrounding area
+To confirm using Random Forest Algorithm, if there is a statistical significance that we are able predict the flood before it happens, based on the weather data, Katulampa water level and H-1 of historical flood data
 
 ## Data Sources
 
@@ -42,6 +45,7 @@ To confirm if there is statistical significance that we are able predict the flo
 * https://bpbd.jakarta.go.id/waterlevel/
 * http://data.jakarta.go.id/group/lingkungan-hidup
 
+Period: 2013-2014
 
 ## Data source from NOAA
 
