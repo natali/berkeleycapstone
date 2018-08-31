@@ -437,7 +437,7 @@ Accuracy is:
 (flood_rf["Normal", "Normal"] + flood_rf["Flood", "Flood"]) / sum(flood_rf)
 ```
 
-## Conclusion
+## Finding
 
 From this data, the effect of adding Katulampa flood gate data is essential for the accuracy of the prediction
 
@@ -607,8 +607,13 @@ Accuracy is:
 (flood_rf["Normal", "Normal"] + flood_rf["H-1", "H-1"]) / sum(flood_rf)
 ```
 
-## Conclusion
+## Finding
 
 The result is inconclusive. We think that the lack amount of data doesn't help either. Kappa is below 0.10, and even negative 0.00, thus indicating that the confidence level is really bad. We can't use this result.
+
+## Conclusion
+
+The model correctly predicts the occurance of flooding based on Jakarta weather data and adding Katulampa flood gate water level showed a stronger accuracy in prediction. 
+However, we still need to improve the model when using H-1 data.
 
 Slide and R code available at https://github.com/natali/berkeleycapstone
