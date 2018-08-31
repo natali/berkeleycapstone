@@ -527,6 +527,27 @@ summary(flood_data_test[14])</pre>
 
 <pre >## [1] 0.7642276</pre>
 
+</article></slide><slide class=""><hgroup><h2>Variable Importance</h2></hgroup><article  id="variable-importance" class="smaller ">
+
+<pre class = 'prettyprint lang-r'>varImp(flood_data_forest)</pre>
+
+<pre >## rf variable importance
+## 
+##           Overall
+## DEWP    100.00000
+## TEMP     90.94879
+## MIN      89.76756
+## MAX      81.93874
+## WDSP     78.00620
+## STP      73.18112
+## SLP      67.71502
+## VISIB    47.71065
+## MXSPD    37.66857
+## PRCP     32.71868
+## RAIN      2.61155
+## THUNDER   0.02213
+## TORNADO   0.00000</pre>
+
 </article></slide><slide class=""><hgroup><h2>What if we add Flood Gate Data</h2></hgroup><article  id="what-if-we-add-flood-gate-data" class="smaller ">
 
 <p>We found data of water level in the Katulampa water gate</p>
@@ -726,7 +747,27 @@ flood_rf</pre>
 
 </article></slide><slide class=""><hgroup><h2>Conclusion</h2></hgroup><article  id="conclusion" class="smaller ">
 
-<p>From this data, the effect of adding Katulampa flood gate data is essential for the accuracy of the prediction</p>
+<p>From this data, the effect of adding Katulampa flood gate data is one contributing factor for the accuracy of the prediction</p>
+
+<pre class = 'prettyprint lang-r'>varImp(flood_data_forest)</pre>
+
+<pre >## rf variable importance
+## 
+##            Overall
+## TEMP       100.000
+## MIN         98.106
+## STP         78.685
+## tinggi_air  77.055
+## SLP         63.815
+## MAX         36.300
+## WDSP        34.785
+## MXSPD       28.218
+## VISIB       19.734
+## DEWP        18.323
+## PRCP         9.959
+## TORNADO      4.707
+## RAIN         3.902
+## THUNDER      0.000</pre>
 
 </article></slide><slide class=""><hgroup><h2>How about predicting 1 Day before?</h2></hgroup><article  id="how-about-predicting-1-day-before" class="smaller ">
 
@@ -922,7 +963,27 @@ flood_rf</pre>
 
 <p>The result is inconclusive. We think that the lack amount of data doesn&#39;t help either. Kappa is below 0.10, and even negative 0.00, thus indicating that the confidence level is really bad. We can&#39;t use this result.</p>
 
-<p>Slide and R code available at <a href='https://github.com/natali/berkeleycapstone' title=''>https://github.com/natali/berkeleycapstone</a></p></article></slide>
+<p>Slide and R code available at <a href='https://github.com/natali/berkeleycapstone' title=''>https://github.com/natali/berkeleycapstone</a></p>
+
+<pre class = 'prettyprint lang-r'>varImp(flood_data_forest)</pre>
+
+<pre >## rf variable importance
+## 
+##            Overall
+## tinggi_air 100.000
+## DEWP        98.884
+## MAX         86.807
+## WDSP        85.602
+## SLP         78.836
+## TEMP        78.462
+## STP         75.818
+## MIN         72.490
+## VISIB       66.421
+## MXSPD       56.533
+## PRCP        36.333
+## THUNDER      1.571
+## RAIN         1.398
+## TORNADO      0.000</pre></article></slide>
 
 
   <slide class="backdrop"></slide>

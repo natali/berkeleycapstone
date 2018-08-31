@@ -276,6 +276,13 @@ Accuracy is:
 (flood_rf["Normal", "Normal"] + flood_rf["Flood", "Flood"]) / sum(flood_rf)
 ```
 
+## Variable Importance
+
+```{r}
+varImp(flood_data_forest)
+
+```
+
 ## What if we add Flood Gate Data
 
 We found data of water level in the Katulampa water gate
@@ -439,9 +446,10 @@ Accuracy is:
 
 ## Conclusion
 
-From this data, the effect of adding Katulampa flood gate data is essential for the accuracy of the prediction
+From this data, the effect of adding Katulampa flood gate data is one contributing factor for the accuracy of the prediction
 
 ```{r}
+varImp(flood_data_forest)
 
 ```
 
@@ -612,3 +620,8 @@ Accuracy is:
 The result is inconclusive. We think that the lack amount of data doesn't help either. Kappa is below 0.10, and even negative 0.00, thus indicating that the confidence level is really bad. We can't use this result.
 
 Slide and R code available at https://github.com/natali/berkeleycapstone
+
+```{r}
+varImp(flood_data_forest)
+
+```
