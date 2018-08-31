@@ -8,13 +8,17 @@ output:
     transition: slower
 ---
 
-![alt text](data/banjir.jpg "Banjir")
+
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(caret)
 set.seed(2)
 ```
+
+## Flood Detection Analysis
+
+![alt text](data/banjir.jpg "Banjir"){width=250px}
 
 ## Background
 
@@ -28,6 +32,8 @@ Research found that there are a few reasons for the flood:
 - tide level
 - land subsidence
 - percipitation from neighboring area, based on the water level at Katulampa floodgate
+
+
 
 ## Problem Statement {.flexbox .vcenter}
 
@@ -274,7 +280,7 @@ Accuracy is:
 
 We found data of water level in the Katulampa water gate
 
-![alt text](data/katulampa.jpg "Katulampa")
+![alt text](data/katulampa.jpg "Katulampa"){width=250px}
 
 ```{r}
 flood_data <- read.csv("data/CLEAN DATASET BANJIR2.csv", stringsAsFactors = FALSE)
