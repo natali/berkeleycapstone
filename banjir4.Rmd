@@ -8,6 +8,8 @@ output:
     transition: slower
 ---
 
+![alt text](data/banjir1.jpg "Banjir")
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(caret)
