@@ -18,12 +18,12 @@ set.seed(2)
 
 ## Flood Detection Analysis
 
-![alt text](data/banjir.jpg "Banjir"){width=250px}
+![alt text](data/banjir.jpg "Banjir")
 
 ## Background
 
 
-Jakarta "flood" a.k.a flood has become somekind of a tradition, where flood can happen yearly and can go for over 2 weeks on every occurence
+Jakarta flooding has become somekind of a tradition, where flood can happen yearly and can go for over 2 weeks on every occurence
 
 Research found that there are a few reasons for the flood: 
 
