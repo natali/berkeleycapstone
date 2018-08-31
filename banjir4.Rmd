@@ -1,4 +1,5 @@
 ---
+![alt text](data/banjir1.jpg "Banjir")
 title: "Flood Detection Analysis"
 author: "The Indo Guys (and a Gal)"
 date: "August 31, 2018"
