@@ -199,6 +199,16 @@ if (!file.exists(rdsdata1)) {
 #flood_data_forest <- train(FACT1 ~ ., data=flood_data_train, method="rf", trControl = ctrl)
 ```
 
+## What is Mtry and ntree
+
+### Mtry
+
+Number of variables randomly sampled as candidates at each split. 
+
+### Ntree
+
+Number of trees to grow.
+
 
 ## Result of the Random Forest Tests
 
@@ -228,12 +238,12 @@ The Kappa statistic (or value) is a metric that compares an Observed Accuracy wi
 
 Kappa = (observed accuracy - expected accuracy)/(1 - expected accuracy)
 
-<0 as indicating no agreement
- 0.00–0.20 as slight, 
- 0.21–0.40 as fair, 
- 0.41–0.60 as moderate, 
- 0.61–0.80 as substantial, and 
- 0.81–1 as almost perfect agreement. 
+* <0 as indicating no agreement
+* 0.00–0.20 as slight, 
+* 0.21–0.40 as fair, 
+* 0.41–0.60 as moderate, 
+* 0.61–0.80 as substantial, and 
+* 0.81–1 as almost perfect agreement. 
 
 ## Random forest
 
@@ -267,9 +277,7 @@ We found data of water level in the Katulampa water gate
 ```{r}
 flood_data <- read.csv("data/CLEAN DATASET BANJIR2.csv", stringsAsFactors = FALSE)
 ```
-```{r}
-summary(flood_data)
-```
+
 
 ```{r}
 summary(flood_data)
@@ -434,6 +442,7 @@ From this data, the effect of adding Katulampa flood gate data is essential for 
 
 ```{r}
 flood_data <- read.csv("data/CLEAN DATASET BANJIR2.csv", stringsAsFactors = FALSE)
+head(flood_data[,19:21], 20)
 ```
 
 ```{r, echo=FALSE}
@@ -547,22 +556,20 @@ summary(results)
 
 ## Plot data of the test
 
-We decided to choose 200 tree instead of 100 tree because the Kappa performance is really well
-
-Kappa: https://stats.stackexchange.com/a/82187
+We use the 1000 ntree result because the Kappa is the best
+```{r}
+flood_data_forest <- modellist3$`1000`
+```
 ```{r}
 dotplot(results)
 
 ```
 
 
-```{r}
-flood_data_forest <- modellist3$`1000`
-```
 
 ## Random forest test result
 
-Result of the random forest function
+Result of the random forest function. You can see that the Kappa is very bad (around zero). The information here is useless.
 ```{r}
 flood_data_forest
 ```
@@ -575,6 +582,13 @@ We try to see the result of the prediction
 
 ```{r}
 summary(flood_data_test[14:15])
+```
+
+## Prediction based on the formula
+
+We try to see the result of the prediction
+
+```{r}
 flood_rf <- table(predict(flood_data_forest, flood_data_test[,-15]), flood_data_test[,15])
 flood_rf
 ```
@@ -587,4 +601,4 @@ Accuracy is:
 
 ## Conclusion
 
-From this data, the effect of adding Katulampa flood gate data is essential for the accuracy of the prediction
+The result is inconclusive. We think that the lack amount of data doesn't help either. Kappa is below 0.10, and even negative 0.00, thus indicating that the confidence level is really bad. We can't use this result.
